@@ -1,5 +1,5 @@
 # Sublime Pretty Shell
-[shfmt](https://github.com/mvdan/sh) wrapper plugin for Sublime Text 3.\
+[shfmt](https://github.com/mvdan/sh) wrapper plugin for Sublime Text 3.
 
 
 # Install
@@ -7,7 +7,7 @@ Waiting for merge...
 
 
 # Options
-```
+```json
 "language": "bash",  // Language variant to parse (bash / posix / mksh)
 "simplify": true,    // Simplify the code
 "binop": false,      // Binary operators such as '&&' and '|' may start a line
@@ -21,6 +21,6 @@ Waiting for merge...
 
 
 # Tips
-Highly recommended to use this plugin with:\
+Highly recommended to use this plugin with:
 
 - [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
