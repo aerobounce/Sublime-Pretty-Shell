@@ -3,7 +3,18 @@
 
 
 # Install
-Waiting for merge...
+- Waiting for merge: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
+- However you can also manually install it:
+```bash
+git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
+```
+- And you're ready, have fun. Make sure you restart ST3.
+
+
+# Tips
+Highly recommended to use this plugin with:
+
+- [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
 
 
 # Options
@@ -18,9 +29,3 @@ Waiting for merge...
 "indent": 4,         // 0 for tabs
 "pretty_on_save": true
 ```
-
-
-# Tips
-Highly recommended to use this plugin with:
-
-- [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
