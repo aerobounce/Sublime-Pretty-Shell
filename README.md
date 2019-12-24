@@ -1,14 +1,16 @@
 # Sublime Pretty Shell
-[shfmt](https://github.com/mvdan/sh) wrapper plugin for Sublime Text 3.
+Shell Script beautifier plugin for Sublime Text 3.\
+Utilizes [mvdan/sh](https://github.com/mvdan/sh).
 
 
 # Install
-- Waiting for merge: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
-- However you can also manually install it:
+- Make sure you have `shfmt` installed.
+- Currently waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
+- Til it's done, however, you can also manually install it:
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
-- And you're ready, have fun. Make sure you restart ST3.
+- And now you're ready, have fun — Make sure you restart ST3.
 
 
 # Tips
