@@ -3,7 +3,7 @@ Shell Script beautifier plugin for Sublime Text 3.\
 Utilizes [mvdan/sh](https://github.com/mvdan/sh).\
 \
 Recommended for shell scripting beginners.\
-I've written this plugin for by myself to learn how to write scripts in correct syntax.
+I've written this plugin for myself to learn how to write scripts in correct syntax.
 
 
 # Install
