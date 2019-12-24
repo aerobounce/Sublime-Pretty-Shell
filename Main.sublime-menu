@@ -1,0 +1,24 @@
+[
+    {
+        "children": [
+            {
+                "caption": "Package Settings",
+                "children": [
+                    {
+                        "args": {
+                            "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
+                            "default": {
+                                "indent": 4,
+                                "pretty_on_save": true,
+                            }
+                        },
+                        "caption": "Pretty Shell",
+                        "command": "edit_settings"
+                    }
+                ],
+                "id": "package-settings"
+            }
+        ],
+        "id": "preferences"
+    }
+]

@@ -1,0 +1,6 @@
+[
+    {
+        "command": "pretty_shell",
+        "keys": ["super+ctrl+s"]
+    }
+]

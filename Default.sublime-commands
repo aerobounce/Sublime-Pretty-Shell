@@ -1,0 +1,13 @@
+[
+    {
+        "caption": "Pretty Shell: Format",
+        "command": "pretty_shell"
+    },
+    {
+        "args": {
+            "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings"
+        },
+        "caption": "Pretty Shell: Settings",
+        "command": "edit_settings"
+    }
+]
