@@ -1,6 +1,9 @@
 # Sublime Pretty Shell
 Shell Script beautifier plugin for Sublime Text 3.\
-Utilizes [mvdan/sh](https://github.com/mvdan/sh).
+Utilizes [mvdan/sh](https://github.com/mvdan/sh).\
+\
+Recommended for shell scripting beginners.\
+I've written this plugin for by myself to learn how to write scripts in correct syntax.
 
 
 # Install
@@ -31,3 +34,7 @@ Highly recommended to use this plugin with:
 "indent": 4,         // 0 for tabs
 "pretty_on_save": true
 ```
+
+
+# Todo
+- [ ] Show parsing errors
