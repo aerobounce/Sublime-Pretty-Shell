@@ -1,4 +1,4 @@
-# Sublime Pretty Shell
+# Pretty Shell
 Shell Script beautifier plugin for Sublime Text 3.\
 Utilizes [mvdan/sh](https://github.com/mvdan/sh).\
 \
@@ -13,7 +13,7 @@ I've written this plugin for myself to learn how to write scripts in correct syn
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
-- And now you're ready, have fun — Make sure you restart ST3.
+ - And now you're ready, have fun — Make sure you restart ST3.
 
 
 # Tips
