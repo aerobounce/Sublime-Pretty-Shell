@@ -23,7 +23,7 @@ Highly recommended to use this plugin with:
 
 
 # Options
-```json
+```javascript
 "language": "bash",  // Language variant to parse (bash / posix / mksh)
 "simplify": true,    // Simplify the code
 "binop": false,      // Binary operators such as '&&' and '|' may start a line
