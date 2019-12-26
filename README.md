@@ -1,6 +1,7 @@
 # Pretty Shell
 Shell Script beautifier plugin for Sublime Text 3.\
 Utilizes [mvdan/sh](https://github.com/mvdan/sh).\
+Currently, waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).\
 \
 Recommended for shell scripting beginners.\
 I've written this plugin for myself to learn how to write scripts in correct syntax.
@@ -8,8 +9,7 @@ I've written this plugin for myself to learn how to write scripts in correct syn
 
 # Install
 - Make sure you have `shfmt` installed.
-- Currently waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
-- Til it's done, however, you can also manually install it (on macOS. Should work on Linux too by doing the same thing in the equivalent directory.):
+- Manual install (on macOS. Should work on Linux too by doing the same thing in the equivalent directory.):
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
