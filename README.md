@@ -1,19 +1,25 @@
 # Pretty Shell
-Shell Script beautifier plugin for Sublime Text 3.\
-Utilizes [mvdan/sh](https://github.com/mvdan/sh).\
-Currently, waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).\
-\
-Recommended for shell scripting beginners.\
+## Shell Script beautifier plugin for Sublime Text 3.
+Utilizes [mvdan/sh](https://github.com/mvdan/sh), quality shell script formatter.
+
+
+## Recommended for shell scripting beginners.
 I've written this plugin for myself to learn how to write scripts in correct syntax.
 
 
-# Install
-- Make sure you have `shfmt` installed.
-- Manual install (on macOS. Should work on Linux too by doing the same thing in the equivalent directory.):
+# Install (Manual)
+This package is not available Package Control yet.\
+Currently waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
+
+## macOS
+1. Make sure you have `shfmt` installed.
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
- - And now you're ready, have fun — Make sure you restart ST3.
+2. And now you're ready, have fun — Make sure you restart ST3.
+
+## Linux
+- It should work on Linux too. Follow the same steps as macOS' with the equivalent clone target directory.
 
 
 # Tips
@@ -38,3 +44,7 @@ Highly recommended to use this plugin with:
 
 # Todo
 - [ ] Show parsing errors
+
+
+# Special Thanks
+This project is inspired by: [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson)
