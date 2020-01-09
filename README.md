@@ -1,50 +1,57 @@
 # Pretty Shell
+
 ## Shell Script beautifier plugin for Sublime Text 3.
 Utilizes [mvdan/sh](https://github.com/mvdan/sh), quality shell script formatter.
-
 
 ## Recommended for shell scripting beginners.
 I've written this plugin for myself to learn how to write scripts in correct syntax.
 
+## Install
+1. `Package Control: Install Package`
+2. Type `PrettyShell` and Install
+3. You're ready
 
-# Install (Manual)
-This package is not available Package Control yet.\
-Currently waiting for merge into: [wbond/package_control_channel](https://github.com/wbond/package_control_channel).
+## Install (Manual)
+1. Quit Sublime Text
+2. Clone this repository
 
-## macOS
-1. Make sure you have `shfmt` installed.
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
-2. And now you're ready, have fun — Make sure you restart ST3.
 
-## Linux
+3. You're ready
+
 - It should work on Linux too. Follow the same steps as macOS' with the equivalent clone target directory.
 
+## Dependency
+Make sure you have installed `shfmt` as this package utilizes the formatter.\
+You can install it with Homebrew:
 
-# Tips
+```bash
+brew install shfmt
+```
+
+## Tips
 Highly recommended to use this plugin with:
 
 - [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
 
-
-# Options
+## Options
 ```javascript
-"language": "bash",  // Language variant to parse (bash / posix / mksh)
-"simplify": true,    // Simplify the code
-"binop": false,      // Binary operators such as '&&' and '|' may start a line
-"switchcase": true,  // Indent switch cases
-"rediop": true,      // Redirect operators will be followed by a space
-"align": false,      // Keep column alignment paddings
-"minify": false,     // Minify program to reduce its size
-"indent": 4,         // 0 for tabs
-"pretty_on_save": true
+    "simplify": true,    // Simplify the code
+    "language": "bash",  // Language variant to parse (bash / posix / mksh)
+    "indent": 4,         // 0 for tabs
+    "binop": false,      // Binary operators such as '&&' and '|' may start a line
+    "switchcase": true,  // Indent switch cases
+    "rediop": true,      // Redirect operators will be followed by a space
+    "align": false,      // Keep column alignment paddings
+    "minify": false,     // Minify program to reduce its size
+    "pretty_on_save": true
 ```
-
 
 # Todo
 - [ ] Show parsing errors
 
-
 # Special Thanks
-This project is inspired by: [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson)
+- [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) (This project is inspired by the package)
+- [mvdan/sh](https://github.com/mvdan/sh) (Shell formatter)
