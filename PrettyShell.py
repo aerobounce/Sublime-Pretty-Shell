@@ -10,6 +10,7 @@
 
 from subprocess import Popen, PIPE
 import tempfile
+
 import sublime
 import sublime_plugin
 
@@ -32,32 +33,34 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
             tmp.write(target_text)
 
         # Compose shfmt command
-        indent = "-i {0}".format(str(settings.get("indent")))
-        language = "-ln \"{0}\"".format(str(settings.get("language")))
-        simplify = "-s" if settings.get("simplify", True) else ""
-        binop = "-bn" if settings.get("binop", True) else ""
-        switchcase = "-ci" if settings.get("switchcase", True) else ""
-        rediop = "-sr" if settings.get("rediop", True) else ""
-        align = "-kp" if settings.get("align", True) else ""
-        minify = "-mn" if settings.get("minify", True) else ""
+        simplify = "-s " if settings.get("simplify", True) else ""
+        language = "-ln \"{0}\" ".format(settings.get("language", "bash"))
+        indent = "-i {0} ".format(settings.get("indent", "0"))
+        binop = "-bn " if settings.get("binop", True) else ""
+        switchcase = "-ci " if settings.get("switchcase", True) else ""
+        rediop = "-sr " if settings.get("rediop", True) else ""
+        align = "-kp " if settings.get("align", True) else ""
+        minify = "-mn " if settings.get("minify", True) else ""
 
-        command = "shfmt -w \"{0}\" ".format(tmp_file_path)
-        command += "{0} ".format(indent)
-        command += "{0} ".format(language)
-        command += "{0} ".format(simplify)
-        command += "{0} ".format(binop)
-        command += "{0} ".format(switchcase)
-        command += "{0} ".format(rediop)
-        command += "{0} ".format(align)
+        command = "shfmt "
+        command += "{0}".format(simplify)
+        command += "{0}".format(language)
+        command += "{0}".format(indent)
+        command += "{0}".format(binop)
+        command += "{0}".format(switchcase)
+        command += "{0}".format(rediop)
+        command += "{0}".format(align)
         command += "{0}".format(minify)
+        command += "-w \"{0}\"".format(tmp_file_path)
 
         # Format
-        print(command)
+        # print(command)
         Popen(command, shell=True, stdout=PIPE).stdout.read()
+        # print(Popen(command, shell=True, stderr=PIPE).stderr.read())
 
         # Read result
-        with open(tmp_file_path, encoding="utf-8") as temp:
-            output = temp.read()
+        with open(tmp_file_path, encoding="utf-8") as tmp:
+            output = tmp.read()
 
         # Replace with result
         self.view.replace(edit, selection, output)
