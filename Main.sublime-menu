@@ -1,24 +1,36 @@
 [
     {
+        "id": "preferences",
         "children": [
             {
+                "id": "package-settings",
                 "caption": "Package Settings",
                 "children": [
                     {
-                        "args": {
-                            "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-                            "default": {
-                                "indent": 4,
-                                "pretty_on_save": true,
-                            }
-                        },
                         "caption": "Pretty Shell",
-                        "command": "edit_settings"
+                        "children": [
+                            {
+                                "caption": "Settings",
+                                "command": "edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
+                                    "default": {
+                                        "indent": 4,
+                                        "pretty_on_save": true
+                                    }
+                                }
+                            },
+                            {
+                                "caption": "Key Bindings",
+                                "command": "edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Pretty Shell/Default ($platform).sublime-keymap"
+                                }
+                            }
+                        ]
                     }
-                ],
-                "id": "package-settings"
+                ]
             }
-        ],
-        "id": "preferences"
+        ]
     }
 ]

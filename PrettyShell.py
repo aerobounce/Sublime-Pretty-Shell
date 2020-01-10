@@ -16,6 +16,7 @@ import sublime_plugin
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
+
     def run(self, edit):
         # Load settings
         settings = sublime.load_settings("Pretty Shell.sublime-settings")
@@ -67,6 +68,7 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
 
 
 class AutoFormatter(sublime_plugin.ViewEventListener):
+
     def on_pre_save(self):
         settings = sublime.load_settings("Pretty Shell.sublime-settings")
         if settings.get("pretty_on_save", False):

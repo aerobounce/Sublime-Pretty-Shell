@@ -33,6 +33,18 @@ brew install shfmt
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
 
+## Usage
+1. `Command Palette...`
+2. `Pretty Shell: Format`
+
+or just save script file you are editing while `pretty_on_save` is `true`.
+
+### Key Binding
+Default Key Binding
+
+- macOS: <kbd>cmd</kbd>+<kbd>ctrl</kbd>+<kbd>s</kbd>
+- Linux: <kbd>alt</kbd>+<kbd>ctrl</kbd>+<kbd>s</kbd>
+
 ## Options
 ```javascript
 "simplify": true,    // Simplify the code
