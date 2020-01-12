@@ -4,13 +4,13 @@
 Utilizes [mvdan/sh](https://github.com/mvdan/sh), quality shell script formatter.
 
 ## Recommended for shell scripting beginners.
-I've written this plugin for myself to learn how to write scripts in correct syntax.\
+I've written this plugin for myself to learn how to write scripts in correct syntax.  
 Highly recommended to use this plugin with:
 
 - [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
 
 ## Dependency
-Make sure you have installed `shfmt` as this package utilizes the formatter.\
+Make sure you have installed `shfmt` as this package utilizes the formatter.  
 You can install it with Homebrew:
 
 ```bash
