@@ -21,37 +21,37 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
         # Load settings
         settings = sublime.load_settings("Pretty Shell.sublime-settings")
 
-        # Read current file
-        selection = sublime.Region(0, self.view.size())
-        target_text = self.view.substr(selection)
-
         # Make temp file
         tmp_file = tempfile.NamedTemporaryFile()
         tmp_file_path = tmp_file.name
 
-        # Write texts
+        # Read current file and write to temp file
+        selection = sublime.Region(0, self.view.size())
+        target_text = self.view.substr(selection)
+
         with open(tmp_file_path, mode="w", encoding="utf-8") as tmp:
             tmp.write(target_text)
 
-        # Compose shfmt command
+        # Retrieve settings
         simplify = "-s " if settings.get("simplify", True) else ""
         language = "-ln \"{0}\" ".format(settings.get("language", "bash"))
-        indent = "-i {0} ".format(settings.get("indent", "0"))
-        binop = "-bn " if settings.get("binop", True) else ""
+        indent = "-i {0} ".format(settings.get("indent", "4"))
+        binop = "-bn " if settings.get("binop", False) else ""
         switchcase = "-ci " if settings.get("switchcase", True) else ""
         rediop = "-sr " if settings.get("rediop", True) else ""
-        align = "-kp " if settings.get("align", True) else ""
-        minify = "-mn " if settings.get("minify", True) else ""
+        align = "-kp " if settings.get("align", False) else ""
+        minify = "-mn " if settings.get("minify", False) else ""
 
+        # Compose shfmt command
         command = "shfmt "
-        command += "{0}".format(simplify)
-        command += "{0}".format(language)
-        command += "{0}".format(indent)
-        command += "{0}".format(binop)
-        command += "{0}".format(switchcase)
-        command += "{0}".format(rediop)
-        command += "{0}".format(align)
-        command += "{0}".format(minify)
+        command += simplify
+        command += language
+        command += indent
+        command += binop
+        command += switchcase
+        command += rediop
+        command += align
+        command += minify
         command += "-w \"{0}\"".format(tmp_file_path)
 
         # Format
