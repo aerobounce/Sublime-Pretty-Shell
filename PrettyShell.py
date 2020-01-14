@@ -8,8 +8,8 @@
 # Copyright © 2019 aerobounce. All rights reserved.
 #
 
-from subprocess import Popen, PIPE
 import tempfile
+from subprocess import PIPE, Popen
 
 import sublime
 import sublime_plugin
@@ -17,10 +17,9 @@ import sublime_plugin
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit):
-        # Load settings
-        settings = sublime.load_settings("Pretty Shell.sublime-settings")
+    settings = None
 
+    def run(self, edit):
         # Make temp file
         tmp_file = tempfile.NamedTemporaryFile()
         tmp_file_path = tmp_file.name
@@ -33,8 +32,10 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
             tmp.write(target_text)
 
         # Retrieve settings
+        settings = PrettyShellCommand.settings
+
         simplify = "-s " if settings.get("simplify", True) else ""
-        language = "-ln \"{0}\" ".format(settings.get("language", "bash"))
+        language = '-ln "{0}" '.format(settings.get("language", "bash"))
         indent = "-i {0} ".format(settings.get("indent", "4"))
         binop = "-bn " if settings.get("binop", False) else ""
         switchcase = "-ci " if settings.get("switchcase", True) else ""
@@ -52,7 +53,7 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
         command += rediop
         command += align
         command += minify
-        command += "-w \"{0}\"".format(tmp_file_path)
+        command += '-w "{0}"'.format(tmp_file_path)
 
         # Format
         # print(command)
@@ -68,9 +69,11 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
 
 
 class AutoFormatter(sublime_plugin.ViewEventListener):
-
     def on_pre_save(self):
-        settings = sublime.load_settings("Pretty Shell.sublime-settings")
-        if settings.get("pretty_on_save", False):
+        PrettyShellCommand.settings = sublime.load_settings(
+            "Pretty Shell.sublime-settings"
+        )
+
+        if PrettyShellCommand.settings.get("pretty_on_save", False):
             if "Bash" in self.view.settings().get("syntax"):
                 self.view.run_command("pretty_shell")
