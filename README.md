@@ -4,13 +4,13 @@
 Utilizes [mvdan/sh](https://github.com/mvdan/sh), quality shell script formatter.
 
 ## Recommended for shell scripting beginners.
-I've written this plugin for myself to learn how to write scripts in correct syntax.  
+I've written this plugin for myself to learn how to write scripts in correct syntax.<br>
 Highly recommended to use this plugin with:
 
 - [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
 
 ## Dependency
-Make sure you have installed `shfmt` as this package utilizes the formatter.  
+Make sure you have installed `shfmt` as this package utilizes the formatter.<br>
 You can install it with Homebrew:
 
 ```bash
@@ -22,7 +22,7 @@ brew install shfmt
 2. Type `PrettyShell` and Install
 3. You're ready
 
-### Install (Manually on macOS)
+### Install (Manually)
 1. Quit Sublime Text
 2. Clone this repository as shown below
 3. You're ready
@@ -47,15 +47,16 @@ Default Key Binding
 
 ## Options
 ```javascript
-"simplify": true,    // Simplify the code
-"language": "bash",  // Language variant to parse (bash / posix / mksh)
-"indent": 4,         // 0 for tabs
-"binop": false,      // Binary operators such as '&&' and '|' may start a line
-"switchcase": true,  // Indent switch cases
-"rediop": true,      // Redirect operators will be followed by a space
-"align": false,      // Keep column alignment paddings
-"minify": false,     // Minify program to reduce its size
-"pretty_on_save": true
+"simplify": true, // Simplify the code
+"language": "bash", // Language variant to parse (bash / posix / mksh)
+"indent": 4, // 0 for tabs
+"binop": false, // Binary operators such as '&&' and '|' may start a line
+"switchcase": true, // Indent switch cases
+"rediop": true, // Redirect operators will be followed by a space
+"align": false, // Keep column alignment paddings
+"minify": false, // Minify program to reduce its size
+"pretty_on_save": true,
+"shfmt_bin_path": "shfmt"
 ```
 
 ## Todo
