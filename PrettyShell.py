@@ -34,17 +34,18 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
         # Retrieve settings
         settings = PrettyShellCommand.settings
 
-        simplify = "-s " if settings.get("simplify", True) else ""
-        language = '-ln "{0}" '.format(settings.get("language", "bash"))
-        indent = "-i {0} ".format(settings.get("indent", "4"))
-        binop = "-bn " if settings.get("binop", False) else ""
-        switchcase = "-ci " if settings.get("switchcase", True) else ""
-        rediop = "-sr " if settings.get("rediop", True) else ""
-        align = "-kp " if settings.get("align", False) else ""
-        minify = "-mn " if settings.get("minify", False) else ""
+        shfmt_bin_path = "{0} ".format(settings.get("shfmt_bin_path"))
+        simplify = "-s " if settings.get("simplify") else ""
+        language = '-ln "{0}" '.format(settings.get("language"))
+        indent = "-i {0} ".format(settings.get("indent"))
+        binop = "-bn " if settings.get("binop") else ""
+        switchcase = "-ci " if settings.get("switchcase") else ""
+        rediop = "-sr " if settings.get("rediop") else ""
+        align = "-kp " if settings.get("align") else ""
+        minify = "-mn " if settings.get("minify") else ""
 
         # Compose shfmt command
-        command = "shfmt "
+        command = shfmt_bin_path
         command += simplify
         command += language
         command += indent
@@ -56,7 +57,7 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
         command += '-w "{0}"'.format(tmp_file_path)
 
         # Format
-        # print(command)
+        print(command)
         Popen(command, shell=True, stdout=PIPE).stdout.read()
         # print(Popen(command, shell=True, stderr=PIPE).stderr.read())
 
