@@ -14,10 +14,7 @@
                                 "command": "edit_settings",
                                 "args": {
                                     "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-                                    "default": {
-                                        "indent": 4,
-                                        "pretty_on_save": true
-                                    }
+                                    "default": "{\n    \"pretty_on_save\": true\n}"
                                 }
                             },
                             {
