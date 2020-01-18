@@ -61,6 +61,7 @@ Default Key Binding
 
 ## Todo
 - [ ] Show parsing errors
+- [ ] Format only selection
 
 ## Special Thanks
 - [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) (This project is inspired by the package)
