@@ -14,6 +14,7 @@ import sublime
 import sublime_plugin
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
+OUTPUT_PANEL_NAME = "pretty_shell_output"
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
@@ -58,10 +59,33 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
             if popen.wait() == 0:
                 # Replace with result
                 self.view.replace(edit, selection, output)
+                self.show_output_panel("")
 
             # Print error message
             else:
-                print("Pretty Shell error:", popen.stderr.read().decode("utf-8"))
+                error_message = "Pretty Shell error:\n" + popen.stderr.read().decode(
+                    "utf-8"
+                )
+                self.show_output_panel(error_message)
+
+    def show_output_panel(self, message):
+        panel = self.view.window().find_output_panel(OUTPUT_PANEL_NAME)
+
+        if not panel:
+            panel = self.view.window().create_output_panel(OUTPUT_PANEL_NAME)
+
+        if message == "":
+            self.view.window().run_command(
+                "hide_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
+            )
+
+        else:
+            panel.run_command("append", {"characters": message})
+            panel.show(panel.size() - 1)
+
+            self.view.window().run_command(
+                "show_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
+            )
 
 
 class AutoFormatter(sublime_plugin.ViewEventListener):
