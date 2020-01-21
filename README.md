@@ -60,7 +60,7 @@ Default Key Binding
 ```
 
 ## Todo
-- [ ] Show parsing errors
+- [x] Show parsing errors
 - [ ] Format only selection
 
 ## Special Thanks
