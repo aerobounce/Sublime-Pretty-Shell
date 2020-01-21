@@ -14,7 +14,7 @@ import sublime
 import sublime_plugin
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
-OUTPUT_PANEL_NAME = "pretty_shell_output"
+OUTPUT_PANEL_NAME = "pretty_shell_error"
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
@@ -53,39 +53,47 @@ class PrettyShellCommand(sublime_plugin.TextCommand):
         with Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             popen.stdin.write(target_text.encode("utf-8"))
             popen.stdin.close()
-            output = popen.stdout.read().decode("utf-8")
+            stdout = popen.stdout.read().decode("utf-8")
+            stderr = popen.stderr.read().decode("utf-8")
 
-            # Replace result if only exit code is 0
-            if popen.wait() == 0:
-                # Replace with result
-                self.view.replace(edit, selection, output)
-                self.show_output_panel("")
+            # Replace result if only stderr is empty
+            if stderr == "":
+                self.view.replace(edit, selection, stdout)
 
-            # Print error message
-            else:
-                error_message = "Pretty Shell error:\n" + popen.stderr.read().decode(
-                    "utf-8"
-                )
-                self.show_output_panel(error_message)
+            # Update output panel state
+            self.manage_output_panel(edit, stderr)
 
-    def show_output_panel(self, message):
+    def manage_output_panel(self, edit, stderr):
+        # Remove output panel
+        if stderr == "":
+            self.view.window().destroy_output_panel(OUTPUT_PANEL_NAME)
+            return
+
+        # Otherwise update output panel
         panel = self.view.window().find_output_panel(OUTPUT_PANEL_NAME)
 
+        # Initialize output panel
         if not panel:
             panel = self.view.window().create_output_panel(OUTPUT_PANEL_NAME)
+            panel.settings().set("draw_centered", True)
+            panel.settings().set("syntax", "Packages/ShellScript/Bash.sublime-syntax")
 
-        if message == "":
-            self.view.window().run_command(
-                "hide_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
-            )
+        # Update output panel
+        stderr = "Pretty Shell error:\n" + stderr
+        panel.set_read_only(False)
+        # Replace with strings
+        panel.replace(edit, sublime.Region(0, panel.size()), stderr)
+        panel.set_viewport_position((0, 0), False)
+        # Set no selections
+        panel.sel().clear()
+        # Show panel
+        panel.show(panel.size() - 1)
+        panel.set_read_only(True)
 
-        else:
-            panel.run_command("append", {"characters": message})
-            panel.show(panel.size() - 1)
-
-            self.view.window().run_command(
-                "show_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
-            )
+        # Show output panel
+        self.view.window().run_command(
+            "show_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
+        )
 
 
 class AutoFormatter(sublime_plugin.ViewEventListener):
