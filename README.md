@@ -17,6 +17,13 @@ You can install it with Homebrew:
 brew install shfmt
 ```
 
+If installed via `brew` and your shell recognize its path, that's it.<br>
+Otherwise, install the command in a way whatever you like and specify full path to the bin with the setting:
+
+```
+"shfmt_bin_path": "FULL PATH to shfmt"
+```
+
 ## Install
 1. `Package Control: Install Package`
 2. Type `PrettyShell` and Install
@@ -27,7 +34,7 @@ brew install shfmt
 2. Clone this repository as shown below
 3. You're ready
 
-- It should work on Linux too. Follow the same steps as above with the equivalent clone target directory.
+- It should work on Linux too. Follow the same steps with the equivalent clone target directory.
 
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
