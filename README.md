@@ -11,14 +11,14 @@ Highly recommended to use this plugin with:
 
 ## Dependency
 Make sure you have installed `shfmt` as this package utilizes the formatter.<br>
-You can install it with Homebrew:
+If you are on macOS, you can install it with Homebrew:
 
 ```bash
 brew install shfmt
 ```
 
 If installed via `brew` and your shell recognize its path, that's it.<br>
-Otherwise, install the command in a way whatever you like and specify full path to the bin with the setting:
+Otherwise, install the command in a way whatever you like, then specify full path to the bin in setting:
 
 ```
 "shfmt_bin_path": "FULL PATH to shfmt"
@@ -29,16 +29,16 @@ Otherwise, install the command in a way whatever you like and specify full path 
 2. Type `PrettyShell` and Install
 3. You're ready
 
-### Install (Manually)
+### Install (Manually on macOS / Linux / Windows)
 1. Quit Sublime Text
 2. Clone this repository as shown below
 3. You're ready
 
-- It should work on Linux too. Follow the same steps with the equivalent clone target directory.
-
 ```bash
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
 ```
+
+- It should work on Linux / Windows too. Follow the same steps with the equivalent clone target directory.
 
 ## Usage
 1. `Command Palette...`
