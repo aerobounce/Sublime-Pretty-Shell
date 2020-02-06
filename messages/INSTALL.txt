@@ -1,0 +1,37 @@
+🐚 Pretty Shell - Shell Script beautifier plugin for Sublime Text 3
+
+⚠️ Dependency
+Pretty Shell does not work without "shfmt" as this package utilizes the formatter.
+"shfmt" is available via several package managers.
+
+• macOS
+    • Homebrew: https://formulae.brew.sh/formula/shfmt
+    • MacPorts: https://ports.macports.org/port/shfmt/summary
+
+• *nix
+    • Alpine: https://pkgs.alpinelinux.org/packages?name=shfmt
+    • Arch: https://www.archlinux.org/packages/community/x86_64/shfmt/
+    • FreeBSD: https://www.freshports.org/devel/shfmt
+    • NixOS: https://github.com/NixOS/nixpkgs/blob/HEAD/pkgs/tools/text/shfmt/default.nix
+    • Snapcraft: https://snapcraft.io/shfmt
+    • Void: https://github.com/void-linux/void-packages/blob/HEAD/srcpkgs/shfmt/template
+
+• Windows
+    • Scoop: https://github.com/ScoopInstaller/Main/blob/HEAD/bucket/shfmt.json
+
+• Binary Releases
+    • mvdan/sh/releases: https://github.com/mvdan/sh/releases
+
+If installed via a package manager and Sublime Text recognizes its path, that's it.
+Otherwise, an error will be shown.
+Specify absolute path to the executable in the settings: `"shfmt_bin_path": "Absolute Path to shfmt"`
+
+⌨️ Usage
+1. Command Palette...
+2. Pretty Shell: Format
+or just save script file you are editing while `pretty_on_save` is `true`.
+
+🔤 Default Key Bindings
+• macOS:   cmd + ctrl + s
+• Linux:   alt + ctrl + s
+• Windows: alt + ctrl + s
