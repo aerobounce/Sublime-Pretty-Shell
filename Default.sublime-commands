@@ -4,6 +4,18 @@
         "command": "pretty_shell"
     },
     {
+        "caption": "Pretty Shell: Format Selection",
+        "command": "pretty_shell_selection"
+    },
+    {
+        "caption": "Pretty Shell: Minify",
+        "command": "pretty_shell_minify"
+    },
+    {
+        "caption": "Pretty Shell: Minify Selection",
+        "command": "pretty_shell_minify_selection"
+    },
+    {
         "caption": "Pretty Shell: Settings",
         "command": "edit_settings",
         "args": { "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings" }

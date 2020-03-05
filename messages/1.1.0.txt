@@ -1,0 +1,13 @@
+v1.1.0
+
+🆕 New Features
+• Commands
+    • 'Pretty Shell: Format Selection'
+    • 'Pretty Shell: Minify'
+    • 'Pretty Shell: Minify Selection'
+
+• Settings Key
+    • "format_selection_only"
+
+⚠️ Breaking Change
+• "pretty_on_save" is now "format_on_save" in settings

@@ -1,12 +1,16 @@
 {
-    "simplify": true, // Simplify the code
+    // shfmt settings
+    "simplify": true,   // Simplify the code
     "language": "bash", // Language variant to parse (bash / posix / mksh)
-    "indent": 4, // 0 for tabs
-    "binop": false, // Binary operators such as '&&' and '|' may start a line
+    "indent": 4,        // 0 for tabs
+    "binop": false,     // Binary operators such as '&&' and '|' may start a line
     "switchcase": true, // Indent switch cases
-    "rediop": true, // Redirect operators will be followed by a space
-    "align": false, // Keep column alignment paddings
-    "minify": false, // Minify program to reduce its size
-    "pretty_on_save": true,
+    "rediop": true,     // Redirect operators will be followed by a space
+    "align": false,     // Keep column alignment paddings
+    "minify": false,    // Minify program to reduce its size
+
+    // Pretty Shell settings
+    "format_selection_only": false, // Entire file will be used if no selections
+    "format_on_save": true,
     "shfmt_bin_path": "shfmt"
 }
