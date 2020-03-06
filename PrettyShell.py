@@ -50,25 +50,30 @@ PHANTOM_STYLE = """
 """
 PHANTOM_SETS = {}
 
-
+# TODO: Consider when 'use_selection' is True
 def update_phantoms(view, stderr):
-    if not stderr:
-        view.erase_phantoms(str(view.id()))
-        PHANTOM_SETS.pop(view.id())
+    view_id = view.id()
 
-    if not view.id() in PHANTOM_SETS:
-        PHANTOM_SETS[view.id()] = sublime.PhantomSet(view, str(view.id()))
+    if not stderr:
+        view.erase_phantoms(str(view_id))
+        if view_id in PHANTOM_SETS:
+            PHANTOM_SETS.pop(view_id)
+        return
+
+    if not view_id in PHANTOM_SETS:
+        PHANTOM_SETS[view_id] = sublime.PhantomSet(view, str(view_id))
 
     # Extract line and column
-    line = int(re.compile(r"\d+|$").findall(stderr)[0]) - 1
-    column = int(re.compile(r"\d+|$").findall(stderr)[1]) - 1
+    digits = re.compile(r"\d+|$").findall(stderr)
+    line = int(digits[0]) - 1
+    column = int(digits[1]) - 1
 
     # Format error message
     pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
     stderr = re.compile(pattern).sub("", stderr)
 
     def erase_phantom(self):
-        view.erase_phantoms(str(view.id()))
+        view.erase_phantoms(str(view_id))
 
     phantoms = []
     point = view.text_point(line, column)
@@ -91,10 +96,10 @@ def update_phantoms(view, stderr):
             on_navigate=erase_phantom,
         )
     )
-    PHANTOM_SETS[view.id()].update(phantoms)
+    PHANTOM_SETS[view_id].update(phantoms)
 
 
-def invoke_formatter(view, edit, use_selection, minify):
+def shfmt(view, edit, use_selection, minify):
     # Load settings file
     settings = sublime.load_settings(SETTINGS_FILENAME)
 
@@ -123,7 +128,8 @@ def invoke_formatter(view, edit, use_selection, minify):
     )
 
     # Format
-    def invoke_command(target_text, selection):
+
+    def format_text(target_text, selection):
         # Open subprocess with the command
         with Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             # Write selection into stdin, then ensure the descriptor is closed
@@ -134,51 +140,46 @@ def invoke_formatter(view, edit, use_selection, minify):
             stderr = popen.stderr.read().decode("utf-8")
 
             # Replace with result if only stderr is empty
-            if stderr == "":
+            if not stderr:
                 view.replace(edit, selection, stdout)
 
-            # Update Phantom
+            # Update Phantoms
             update_phantoms(view, stderr)
 
-    def format_entire_file():
+    # Prevent needles iteration AMAP
+    if (settings.get("format_selection_only") or use_selection) and any(
+        [not r.empty() for r in view.sel()]
+    ):
+        for region in view.sel():
+            if not region.empty():
+                target_text = view.substr(region)
+                format_text(target_text, region)
+
+    else:
         if not use_selection:
             selection = sublime.Region(0, view.size())
             target_text = view.substr(selection)
-            invoke_command(target_text, selection)
-
-    # Prevent needles iteration AMAP
-    if settings.get("format_selection_only") or use_selection:
-        if any([not r.empty() for r in view.sel()]):
-            for region in view.sel():
-                if not region.empty():
-                    target_text = view.substr(region)
-                    invoke_command(target_text, region)
-
-        else:
-            format_entire_file()
-
-    else:
-        format_entire_file()
+            format_text(target_text, selection)
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        invoke_formatter(self.view, edit, False, False)
+        shfmt(self.view, edit, False, False)
 
 
 class PrettyShellSelectionCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        invoke_formatter(self.view, edit, True, False)
+        shfmt(self.view, edit, True, False)
 
 
 class PrettyShellMinifyCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        invoke_formatter(self.view, edit, False, True)
+        shfmt(self.view, edit, False, True)
 
 
 class PrettyShellMinifySelectionCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        invoke_formatter(self.view, edit, True, True)
+        shfmt(self.view, edit, True, True)
 
 
 class PrettyShellListener(sublime_plugin.ViewEventListener):
@@ -188,4 +189,6 @@ class PrettyShellListener(sublime_plugin.ViewEventListener):
                 self.view.run_command("pretty_shell")
 
     def on_close(self):
-        PHANTOM_SETS.pop(self.view.id())
+        view_id = self.view.id()
+        if view_id in PHANTOM_SETS:
+            PHANTOM_SETS.pop(view_id)
