@@ -1,10 +1,10 @@
 # 🐚 Pretty Shell
 
-### Shell Script Beautifier/Minifier/SimpleLinter plugin for Sublime Text 3
+### Shell Script formatter / syntax checker for Sublime Text 3
 - [packagecontrol.io/packages/Pretty Shell](https://packagecontrol.io/packages/Pretty%20Shell)
 - Powered by **[mvdan/sh](https://github.com/mvdan/sh)**, quality shell script formatter.
-- **Blazingly Fast.**
-- **Simple Linting.**
+- **Blazingly fast**
+- **Syntax check on demand** ([mvdan/sh#replacing-bash--n](https://github.com/mvdan/sh#replacing-bash--n))
 - Recommended for shell scripting beginners.
     - I've written this plugin for myself to learn how to write shell scripts in correct syntax.
     - **Highly recommended to use this plugin with: [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)**
@@ -84,8 +84,9 @@ Otherwise, specify the absolute path in the settings:
 ```
 
 ## ☑️ Todo
-- [ ] Highlight `shfmt`'s error position in `view` to use this package as simple shellscript linter
-- [ ] Make output panel's coloring smarter (like SublimeLinter)
+- [ ] Add `Show Syntax Error` option
+- [x] Highlight `shfmt`'s error position using Phantom
+- [x] ~Make output panel's coloring smarter? (like SublimeLinter)~
 - [x] Make output panel always frontmost, as it's always fatal error `shfmt` cannot handle when it needs the panel
 - [x] Add `Format Entire File` command
 - [x] Add `Format Selection` command

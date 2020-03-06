@@ -5,17 +5,93 @@
 #
 # AGPLv3 License
 # Created by github.com/aerobounce on 2019/11/18.
-# Copyright © 2019 aerobounce. All rights reserved.
+# Copyright © 2019 to Present, aerobounce. All rights reserved.
 #
 
-from os import path
+import html
+import re
 from subprocess import PIPE, Popen
 
 import sublime
 import sublime_plugin
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
-OUTPUT_PANEL_NAME = "pretty_shell_error"
+PHANTOM_STYLE = """
+<style>
+    div.error-arrow {
+        border-top: 0.4rem solid transparent;
+        border-left: 0.5rem solid color(var(--redish) blend(var(--background) 30%));
+        width: 0;
+        height: 0;
+    }
+    div.error {
+        padding: 0.4rem 0 0.4rem 0.7rem;
+        margin: 0 0 0.2rem;
+        border-radius: 0 0.2rem 0.2rem 0.2rem;
+    }
+    div.error span.message {
+        padding-right: 0.7rem;
+    }
+    div.error a {
+        text-decoration: inherit;
+        padding: 0.35rem 0.7rem 0.45rem 0.8rem;
+        position: relative;
+        bottom: 0.05rem;
+        border-radius: 0 0.2rem 0.2rem 0;
+        font-weight: bold;
+    }
+    html.dark div.error a {
+        background-color: #00000018;
+    }
+    html.light div.error a {
+        background-color: #ffffff18;
+    }
+</style>
+"""
+PHANTOM_SETS = {}
+
+
+def update_phantoms(view, stderr):
+    if not stderr:
+        view.erase_phantoms(str(view.id()))
+        PHANTOM_SETS.pop(view.id())
+
+    if not view.id() in PHANTOM_SETS:
+        PHANTOM_SETS[view.id()] = sublime.PhantomSet(view, str(view.id()))
+
+    # Extract line and column
+    line = int(re.compile(r"\d+|$").findall(stderr)[0]) - 1
+    column = int(re.compile(r"\d+|$").findall(stderr)[1]) - 1
+
+    # Format error message
+    pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
+    stderr = re.compile(pattern).sub("", stderr)
+
+    def erase_phantom(self):
+        view.erase_phantoms(str(view.id()))
+
+    phantoms = []
+    point = view.text_point(line, column)
+    phantoms.append(
+        sublime.Phantom(
+            sublime.Region(point, view.line(point).b),
+            (
+                "<body id=inline-error>"
+                + PHANTOM_STYLE
+                + '<div class="error-arrow"></div><div class="error">'
+                + '<span class="message">'
+                + html.escape(stderr, quote=False)
+                + "</span>"
+                + "<a href=hide>"
+                + chr(0x00D7)
+                + "</a></div>"
+                + "</body>"
+            ),
+            sublime.LAYOUT_BELOW,
+            on_navigate=erase_phantom,
+        )
+    )
+    PHANTOM_SETS[view.id()].update(phantoms)
 
 
 def invoke_formatter(view, edit, use_selection, minify):
@@ -23,10 +99,10 @@ def invoke_formatter(view, edit, use_selection, minify):
     settings = sublime.load_settings(SETTINGS_FILENAME)
 
     # Retrieve settings (No need for nil fallback here)
-    shfmt_bin_path = "{0} ".format(settings.get("shfmt_bin_path"))
+    shfmt_bin_path = "{} ".format(settings.get("shfmt_bin_path"))
     simplify = "-s " if settings.get("simplify") else ""
-    language = '-ln "{0}" '.format(settings.get("language"))
-    indent = "-i {0} ".format(settings.get("indent"))
+    language = '-ln "{}" '.format(settings.get("language"))
+    indent = "-i {} ".format(settings.get("indent"))
     binop = "-bn " if settings.get("binop") else ""
     switchcase = "-ci " if settings.get("switchcase") else ""
     rediop = "-sr " if settings.get("rediop") else ""
@@ -61,8 +137,8 @@ def invoke_formatter(view, edit, use_selection, minify):
             if stderr == "":
                 view.replace(edit, selection, stdout)
 
-            # Update output panel state
-            manage_output_panel(view, edit, stderr)
+            # Update Phantom
+            update_phantoms(view, stderr)
 
     def format_entire_file():
         if not use_selection:
@@ -83,51 +159,6 @@ def invoke_formatter(view, edit, use_selection, minify):
 
     else:
         format_entire_file()
-
-
-def manage_output_panel(view, edit, stderr):
-    # Remove output panel if stderr is empty
-    if stderr == "":
-        view.window().destroy_output_panel(OUTPUT_PANEL_NAME)
-        return
-
-    # Otherwise update output panel
-    panel = view.window().find_output_panel(OUTPUT_PANEL_NAME)
-
-    # Initialize output panel if `panel` is `None`
-    if not panel:
-        panel = view.window().create_output_panel(OUTPUT_PANEL_NAME)
-        panel.settings().set("draw_centered", True)
-        # panel.settings().set("syntax", "Packages/ShellScript/Bash.sublime-syntax")
-
-    # Update output panel contents
-    # Filename idea borrowed from SublimeLinter
-    file_name = (
-        path.basename(view.file_name())
-        if view.file_name()
-        else "untitled (Buffer ID {})".format(view.buffer_id())
-    )
-    # Format stderr
-    stderr = stderr.replace("<standard input>:", "    ")
-    message = file_name + "\n" + stderr
-    panel.set_read_only(False)
-    # Replace with stderr strings
-    panel.replace(edit, sublime.Region(0, panel.size()), message)
-    panel.set_viewport_position((0, 0), False)
-    # Clear selections
-    panel.sel().clear()
-    # Prepare panel size
-    panel.show(panel.size() - 1)
-    panel.set_read_only(True)
-
-    # Show output panel
-    # Dirty hack to prioritize this panel over SublimeLinter
-    sublime.set_timeout_async(
-        lambda: view.window().run_command(
-            "show_panel", {"panel": "output.{0}".format(OUTPUT_PANEL_NAME)}
-        ),
-        160,
-    )
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):
@@ -155,3 +186,6 @@ class PrettyShellListener(sublime_plugin.ViewEventListener):
         if "Bash" in self.view.settings().get("syntax"):
             if sublime.load_settings(SETTINGS_FILENAME).get("format_on_save"):
                 self.view.run_command("pretty_shell")
+
+    def on_close(self):
+        PHANTOM_SETS.pop(self.view.id())
