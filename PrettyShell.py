@@ -50,14 +50,15 @@ PHANTOM_STYLE = """
 """
 PHANTOM_SETS = {}
 
-# TODO: Consider when 'use_selection' is True
-def update_phantoms(view, stderr):
+
+def update_phantoms(view, stderr, region):
     view_id = view.id()
 
+    view.erase_phantoms(str(view_id))
+    if view_id in PHANTOM_SETS:
+        PHANTOM_SETS.pop(view_id)
+
     if not stderr:
-        view.erase_phantoms(str(view_id))
-        if view_id in PHANTOM_SETS:
-            PHANTOM_SETS.pop(view_id)
         return
 
     if not view_id in PHANTOM_SETS:
@@ -67,6 +68,9 @@ def update_phantoms(view, stderr):
     digits = re.compile(r"\d+|$").findall(stderr)
     line = int(digits[0]) - 1
     column = int(digits[1]) - 1
+
+    if region:
+        line += view.rowcol(region.begin())[0]
 
     # Format error message
     pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
@@ -129,7 +133,7 @@ def shfmt(view, edit, use_selection, minify):
 
     # Format
 
-    def format_text(target_text, selection):
+    def format_text(target_text, selection, region):
         # Open subprocess with the command
         with Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             # Write selection into stdin, then ensure the descriptor is closed
@@ -143,23 +147,40 @@ def shfmt(view, edit, use_selection, minify):
             if not stderr:
                 view.replace(edit, selection, stdout)
 
+            # Present alert if 'shfmt' not found
+            if "command not found" in stderr:
+                sublime.error_message(
+                    "Pretty Shell - Error:\n"
+                    + stderr
+                    + "Specify absolute path to 'shfmt' in settings"
+                )
+                return stderr
+
             # Update Phantoms
-            update_phantoms(view, stderr)
+            update_phantoms(view, stderr, region)
+
+            return stderr
 
     # Prevent needles iteration AMAP
-    if (settings.get("format_selection_only") or use_selection) and any(
-        [not r.empty() for r in view.sel()]
-    ):
+    has_selection = any([not r.empty() for r in view.sel()])
+    if (settings.get("format_selection_only") or use_selection) and has_selection:
         for region in view.sel():
-            if not region.empty():
-                target_text = view.substr(region)
-                format_text(target_text, region)
+            if region.empty():
+                continue
+
+            # Break at the first error
+            if format_text(view.substr(region), region, region):
+                break
 
     else:
-        if not use_selection:
-            selection = sublime.Region(0, view.size())
-            target_text = view.substr(selection)
-            format_text(target_text, selection)
+        # Don't format entire file when use_selection is true
+        if use_selection:
+            return
+
+        # Use entire region/string of view
+        selection = sublime.Region(0, view.size())
+        target_text = view.substr(selection)
+        format_text(target_text, selection, None)
 
 
 class PrettyShellCommand(sublime_plugin.TextCommand):

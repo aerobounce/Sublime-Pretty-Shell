@@ -1,33 +1,39 @@
-# 🐚 Pretty Shell
+## [🐚 Pretty Shell](https://packagecontrol.io/packages/Pretty%20Shell)
 
-### Shell Script formatter / syntax checker for Sublime Text 3
-- [packagecontrol.io/packages/Pretty Shell](https://packagecontrol.io/packages/Pretty%20Shell)
-- Powered by **[mvdan/sh](https://github.com/mvdan/sh)**, quality shell script formatter.
-- **Blazingly fast**
-- **Syntax check on demand** ([mvdan/sh#replacing-bash--n](https://github.com/mvdan/sh#replacing-bash--n))
-- Recommended for shell scripting beginners.
-    - I've written this plugin for myself to learn how to write shell scripts in correct syntax.
-    - **Highly recommended to use this plugin with: [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)**
+> Shell Script Formatter / Syntax Checker for Sublime Text 3<br>
+> For Every Shell Scripters.
 
-## 📦 Install
+<table width="100%" style="border-spacing: 0px;">
+<tr>
+    <th><b>🚅 Blazingly Fast Formatting / Minifying</b></th>
+    <th><b><a href="https://github.com/mvdan/sh#replacing-bash--n">🚦 Syntax Checking</a></b></th>
+</tr>
+<tr>
+    <td colspan="2" style="padding: 0px; margin: 0px;">
+        <img src="assets/demo.gif" style="display: block; width: 100%;"><img>
+    </td>
+</tr>
+</table>
+
+- Recommended to use this plugin with: [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
+
+### 📦 Install
 1. <kbd>Package Control: Install Package</kbd>
 2. Type <kbd>PrettyShell</kbd> and Install
-3. You're ready
+3. You're ready to script.
 
-### 📦 Manual Install
-1. Clone this repository as shown below
-2. You're ready (Restart Sublime Text if the package is not recognized)
-
-```bash
-# Example on macOS
-git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/PrettyShell"
-# It should work on Linux / Windows too,
-# Follow the same steps with the equivalent clone target directory.
-```
+>    #### Manual Install
+>    ```bash
+>    # 1. Clone this repository as shown below
+>    # 2. You're ready (Restart Sublime Text if the package is not recognized)
+>
+>    # Example on macOS (It should work on Linux / Windows too, follow the same steps with the equivalent clone target directory)
+>    git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/Pretty Shell"
+>    ```
 
 ### ⚠️ Dependency
-**Pretty Shell** does not work without `shfmt` as this package utilizes the formatter.<br>
-`shfmt` is available via several package managers and binary releases by its author.<br>
+Pretty Shell **does not work without `shfmt`** as this package utilizes the formatter.<br>
+It is available via several package managers, and in pre-built binary form.<br>
 
 - **macOS**
     - [Homebrew](https://formulae.brew.sh/formula/shfmt)
@@ -42,19 +48,17 @@ git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/
     - [Void](https://github.com/void-linux/void-packages/blob/HEAD/srcpkgs/shfmt/template)
 - **Windows**
     - [Scoop](https://github.com/ScoopInstaller/Main/blob/HEAD/bucket/shfmt.json)
-- **Pre-built binary releases**
+- **Pre-Built Binary Releases**
     - [mvdan/sh/releases](https://github.com/mvdan/sh/releases)
 
-If installed via a package manager and **Sublime Text** recognizes its path, that's it.<br>
-Otherwise, specify the absolute path in the settings:
-
-```JavaScript
-"shfmt_bin_path": "Absolute Path to shfmt"
-```
-
-## ⌨️ Usage
+> If Sublime Text does not recognize `shfmt`, specify the absolute path in the settings:
+>
+>    ```JavaScript
+>    "shfmt_bin_path": "Absolute Path to shfmt"
+>    ```
 
 ### 📝 Available Commands
+
 | Caption                                   | Command                         | Default Key Bindings                                              |
 | ----------------------------------------- | ------------------------------- | ----------------------------------------------------------------- |
 | <kbd>Pretty Shell: Format</kbd>           | `pretty_shell`                  | <kbd>cmd</kbd> or <kbd>alt</kbd> + <kbd>ctrl</kbd> + <kbd>s</kbd> |
@@ -66,6 +70,7 @@ Otherwise, specify the absolute path in the settings:
 - Be aware that any manual modifications with `Format Selection` commands might be lost upon saving a file if `format_on_save` is `true`, which it is by default.
 
 ### 🛠 Default Settings
+
 ```javascript
 // shfmt settings
 "simplify": true,   // Simplify the code
@@ -83,17 +88,12 @@ Otherwise, specify the absolute path in the settings:
 "shfmt_bin_path": "shfmt"
 ```
 
-## ☑️ Todo
-- [ ] Add `Show Syntax Error` option
-- [x] Highlight `shfmt`'s error position using Phantom
-- [x] ~Make output panel's coloring smarter? (like SublimeLinter)~
-- [x] Make output panel always frontmost, as it's always fatal error `shfmt` cannot handle when it needs the panel
-- [x] Add `Format Entire File` command
-- [x] Add `Format Selection` command
-- [x] Add `Minify Entire File` command
-- [x] Add `Minify Selection` command
-- [x] Add `format_selection_only` option
+### ☑️ Todo
 
-## 🤝 Special Thanks
-- [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) (This project is inspired by the package)
-- [mvdan/sh](https://github.com/mvdan/sh) (Shell formatter)
+- [ ] Real-time formatting / syntax checking for fun?
+
+### 🤝 Thank you
+
+- [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) — Inspired by this project
+- [mvdan/sh](https://github.com/mvdan/sh) — Pretty Shell is powerd by shfmt, the quality formatter
+- [realm/strip-frameworks.sh](https://github.com/realm/realm-cocoa/blob/master/scripts/strip-frameworks.sh) — Script used in the demo gif

@@ -1,0 +1,12 @@
+v1.2.0
+
+🆕 New Features
+• Pretty Shell now shows syntax error on format
+    • This is quite useful feature, as there are some
+      corner syntax errors that shellcheck does not catch but shfmt does.
+    • If you are confident enough with your scripting style,
+      Pretty Shell might just be enough for you now.
+      The shellcheck linter is still recommended for the most people though.
+
+❗️ Removed Feature
+• Output Panel is no longer used as it conflicts with SublimeLinter
