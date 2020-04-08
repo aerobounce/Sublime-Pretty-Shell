@@ -1,7 +1,8 @@
-## [🐚 Pretty Shell](https://packagecontrol.io/packages/Pretty%20Shell)
+## 🐚 Pretty Shell
 
 > Shell Script Formatter / Syntax Checker for Sublime Text 3<br>
-> For Every Shell Scripters.
+> For Every Shell Scripters.<br>
+> [Available via Package Control](https://packagecontrol.io/packages/Pretty%20Shell)
 
 <table width="100%" style="border-spacing: 0px;">
 <tr>
@@ -10,26 +11,33 @@
 </tr>
 <tr>
     <td colspan="2" style="padding: 0px; margin: 0px;">
-        <img src="assets/demo.gif" style="display: block; width: 100%;"><img>
+        <img src="https://user-images.githubusercontent.com/10491362/78775969-0c057a00-79d2-11ea-942e-582f81849491.gif" style="display: block; width: 100%;" />
     </td>
 </tr>
 </table>
 
-- Recommended to use this plugin with: [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck)
 
 ### 📦 Install
 1. <kbd>Package Control: Install Package</kbd>
 2. Type <kbd>PrettyShell</kbd> and Install
 3. You're ready to script.
+4. Recommended to use Pretty Shell with [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck).
 
->    #### Manual Install
->    ```bash
->    # 1. Clone this repository as shown below
->    # 2. You're ready (Restart Sublime Text if the package is not recognized)
->
->    # Example on macOS (It should work on Linux / Windows too, follow the same steps with the equivalent clone target directory)
->    git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "$HOME/Library/Application Support/Sublime Text 3/Packages/Pretty Shell"
->    ```
+<blockquote>
+<b>Manual Install</b>
+
+```sh
+# 1. Clone this repository as shown below
+# 2. You're ready (Restart Sublime Text if the package is not recognized)
+
+# Example on macOS (It should work on Linux / Windows too.
+# Follow the same steps with the equivalent clone target directory)
+
+cd "$HOME/Library/Application Support/Sublime Text 3/Packages"
+git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "Pretty Shell"
+```
+
+</blockquote>
 
 ### ⚠️ Dependency
 Pretty Shell **does not work without `shfmt`** as this package utilizes the formatter.<br>
@@ -53,9 +61,9 @@ It is available via several package managers, and in pre-built binary form.<br>
 
 > If Sublime Text does not recognize `shfmt`, specify the absolute path in the settings:
 >
->    ```JavaScript
->    "shfmt_bin_path": "Absolute Path to shfmt"
->    ```
+> ```JavaScript
+> "shfmt_bin_path": "Absolute Path to shfmt"
+> ```
 
 ### 📝 Available Commands
 
