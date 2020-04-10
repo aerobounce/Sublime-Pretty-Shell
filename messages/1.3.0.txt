@@ -1,0 +1,4 @@
+v1.3.0
+
+🆕 New Option
+• "fnbrace": Place function opening braces on a separate line.
