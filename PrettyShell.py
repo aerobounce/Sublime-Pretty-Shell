@@ -116,6 +116,7 @@ def shfmt(view, edit, use_selection, minify):
     switchcase = "-ci " if settings.get("switchcase") else ""
     rediop = "-sr " if settings.get("rediop") else ""
     align = "-kp " if settings.get("align") else ""
+    fnbrace = "-fn " if settings.get("fnbrace") else ""
     minify = "-mn" if (settings.get("minify") or minify) else ""
 
     # Compose shfmt command
@@ -128,6 +129,7 @@ def shfmt(view, edit, use_selection, minify):
         + switchcase
         + rediop
         + align
+        + fnbrace
         + minify
     )
 
