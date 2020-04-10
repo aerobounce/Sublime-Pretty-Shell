@@ -21,7 +21,7 @@
 1. <kbd>Package Control: Install Package</kbd>
 2. Type <kbd>PrettyShell</kbd> and Install
 3. You're ready to script.
-4. Recommended to use Pretty Shell with [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck).
+4. Recommended to use [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck).
 
 <blockquote>
 <b>Manual Install</b>
@@ -80,20 +80,21 @@ It is available via several package managers, and in pre-built binary form.<br>
 ### 🛠 Default Settings
 
 ```javascript
-// shfmt settings
+/* Pretty Shell */
+"format_selection_only": false, // Entire file will be used if no selection available
+"format_on_save": true,         // Invoke "Pretty Shell: Format" command on save
+"shfmt_bin_path": "shfmt",
+
+/* shfmt */
 "simplify": true,   // Simplify the code
+"minify": false,    // Minify the code to reduce its size (implies "simplify")
 "language": "bash", // Language variant to parse (bash / posix / mksh)
 "indent": 4,        // 0 for tabs
 "binop": false,     // Binary operators such as '&&' and '|' may start a line
 "switchcase": true, // Indent switch cases
 "rediop": true,     // Redirect operators will be followed by a space
 "align": false,     // Keep column alignment paddings
-"minify": false,    // Minify program to reduce its size
-
-// Pretty Shell settings
-"format_selection_only": false, // Entire file will be used if no selections
-"format_on_save": true,
-"shfmt_bin_path": "shfmt"
+"fnbrace": false    // Place function opening braces on a separate line
 ```
 
 ### ☑️ Todo
