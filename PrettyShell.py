@@ -150,12 +150,17 @@ def shfmt(view, edit, use_selection, minify):
                 view.replace(edit, selection, stdout)
 
             # Present alert if 'shfmt' not found
-            if "command not found" in stderr:
+            if "not found" in stderr:
                 sublime.error_message(
                     "Pretty Shell - Error:\n"
                     + stderr
                     + "Specify absolute path to 'shfmt' in settings"
                 )
+                return stderr
+
+            # Present error alert
+            if stderr:
+                sublime.error_message("Pretty Shell - Error:\n" + stderr)
                 return stderr
 
             # Update Phantoms

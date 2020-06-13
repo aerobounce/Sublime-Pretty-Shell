@@ -1,39 +1,8 @@
-🐚 Pretty Shell - Shell Script Beautifier/Minifier/SimpleLinter plugin for Sublime Text 3
+🐚 Pretty Shell - Shell Script formatter
 
-⚠️ Dependency
-Pretty Shell does not work without "shfmt" as this package utilizes the formatter.
-"shfmt" is available via several package managers and binary releases by its author.
+    ⚠️ Windows / *nix Users
+        You need to specify the absolute path in the settings:
+            "shfmt_bin_path": "Absolute Path to shfmt"
 
-• macOS
-    • Homebrew: https://formulae.brew.sh/formula/shfmt
-    • MacPorts: https://ports.macports.org/port/shfmt/summary
-
-• *nix
-    • Linuxbrew: https://github.com/Homebrew/linuxbrew-core/blob/master/Formula/shfmt.rb
-    • Alpine: https://pkgs.alpinelinux.org/packages?name=shfmt
-    • Arch: https://www.archlinux.org/packages/community/x86_64/shfmt/
-    • FreeBSD: https://www.freshports.org/devel/shfmt
-    • NixOS: https://github.com/NixOS/nixpkgs/blob/HEAD/pkgs/tools/text/shfmt/default.nix
-    • Snapcraft: https://snapcraft.io/shfmt
-    • Void: https://github.com/void-linux/void-packages/blob/HEAD/srcpkgs/shfmt/template
-
-• Windows
-    • Scoop: https://github.com/ScoopInstaller/Main/blob/HEAD/bucket/shfmt.json
-
-• Binary Releases
-    • mvdan/sh/releases: https://github.com/mvdan/sh/releases
-
-If installed via a package manager and Sublime Text recognizes its path, that's it.
-Otherwise, specify the absolute path in the settings:
-"shfmt_bin_path": "Absolute Path to shfmt"
-
-📝 Available Commands
-Caption                         | Command                         | Default Key Bindings   |
-------------------------------- | ------------------------------- | ---------------------- |
-Pretty Shell: Format            | `pretty_shell`                  | cmd or alt + ctrl + s  |
-Pretty Shell: Format Selection  | `pretty_shell_selection`        | None                   |
-Pretty Shell: Minify            | `pretty_shell_minify`           | None                   |
-Pretty Shell: Minify Selection  | `pretty_shell_minify_selection` | None                   |
-
-• Command is the name of the command you can use for Key-Bindings.
-• Be aware that any manual modifications will be lost upon saving a file if `format_on_save` is `true`, which it is by default.
+    ℹ️ Visit repository for more details:
+        https://github.com/aerobounce/Sublime-Pretty-Shell
