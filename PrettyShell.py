@@ -158,8 +158,8 @@ def shfmt(view, edit, use_selection, minify):
                 )
                 return stderr
 
-            # Present error alert
-            if stderr:
+            # Present alert of unknown error
+            if stderr and not "standard input" in stderr:
                 sublime.error_message("Pretty Shell - Error:\n" + stderr)
                 return stderr
 

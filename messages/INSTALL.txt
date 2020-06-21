@@ -1,8 +1,18 @@
-🐚 Pretty Shell - Shell Script formatter
+🐚 Pretty Shell - Shell Script Formatter
 
-    ⚠️ Windows / *nix Users
-        You need to specify the absolute path in the settings:
-            "shfmt_bin_path": "Absolute Path to shfmt"
+    ⚠️ macOS Users
+        • If your default shell have the PATH to shfmt,
+            you simplu can start using this plugin.
+        • If that is not the case, specify the absolute path in the settings:
+            {
+                "shfmt_bin_path": "Absolute Path to shfmt"
+            }
+
+    ⚠️ *nix / Windows Users
+        • You need to specify the absolute path in the settings:
+            {
+                "shfmt_bin_path": "Absolute Path to shfmt"
+            }
 
     ℹ️ Visit repository for more details:
-        https://github.com/aerobounce/Sublime-Pretty-Shell
+        • https://github.com/aerobounce/Sublime-Pretty-Shell
