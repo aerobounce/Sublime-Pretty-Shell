@@ -17,7 +17,7 @@
 </table>
 
 
-### 📦 Install
+## 📦 Install
 1. <kbd>Package Control: Install Package</kbd>
 2. Type <kbd>PrettyShell</kbd> and Install
 3. You're ready to script.
@@ -39,7 +39,7 @@ git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "Pretty Shell"
 
 </blockquote>
 
-### ⚠️ Dependency
+## ⚠️ Dependency
 Pretty Shell **does not work without `shfmt`** as this package utilizes the formatter.<br>
 It is available via several package managers, and in pre-built binary form.<br>
 
@@ -65,7 +65,7 @@ It is available via several package managers, and in pre-built binary form.<br>
 > "shfmt_bin_path": "Absolute Path to shfmt"
 > ```
 
-### 📝 Available Commands
+## 📝 Available Commands
 
 | Caption                                   | Command                         | Default Key Bindings                                              |
 | ----------------------------------------- | ------------------------------- | ----------------------------------------------------------------- |
@@ -77,7 +77,7 @@ It is available via several package managers, and in pre-built binary form.<br>
 - **Command** is the name of the command you can use for **Key-Bindings**.
 - Be aware that any manual modifications with `Format Selection` commands might be lost upon saving a file if `format_on_save` is `true`, which it is by default.
 
-### 🛠 Default Settings
+## 🛠 Default Settings
 
 ```javascript
 /* Pretty Shell */
@@ -97,11 +97,7 @@ It is available via several package managers, and in pre-built binary form.<br>
 "fnbrace": false    // Place function opening braces on a separate line
 ```
 
-### ☑️ Todo
-
-- [ ] Real-time formatting / syntax checking for fun?
-
-### 🤝 Thank you
+## 🤝 Thank you
 
 - [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) — Inspired by this project
 - [mvdan/sh](https://github.com/mvdan/sh) — Pretty Shell is powerd by shfmt, the quality formatter
