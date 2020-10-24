@@ -2,7 +2,7 @@
 
     ⚠️ macOS Users
         • If your default shell have the PATH to shfmt,
-            you simplu can start using this plugin.
+            you simply can start using this plugin.
         • If that is not the case, specify the absolute path in the settings:
             {
                 "shfmt_bin_path": "Absolute Path to shfmt"
