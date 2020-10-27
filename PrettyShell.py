@@ -119,6 +119,9 @@ def shfmt(view, edit, use_selection, minify):
     fnbrace = "-fn " if settings.get("fnbrace") else ""
     minify = "-mn" if (settings.get("minify") or minify) else ""
 
+    # Use non UNC path in order for Popen to work properly in case we run from wsl file
+    cwd = sublime.packages_path()
+
     # Compose shfmt command
     command = (
         shfmt_bin_path
@@ -137,7 +140,7 @@ def shfmt(view, edit, use_selection, minify):
 
     def format_text(target_text, selection, region):
         # Open subprocess with the command
-        with Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
+        with Popen(command, cwd=cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             # Write selection into stdin, then ensure the descriptor is closed
             popen.stdin.write(target_text.encode("utf-8"))
             popen.stdin.close()
