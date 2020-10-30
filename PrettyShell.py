@@ -109,15 +109,26 @@ def shfmt(view, edit, use_selection, minify):
 
     # Retrieve settings (No need for nil fallback here)
     shfmt_bin_path = "{} ".format(settings.get("shfmt_bin_path"))
+    use_editorconfig = settings.get("use_editorconfig")
+
     simplify = "-s " if settings.get("simplify") else ""
-    language = '-ln "{}" '.format(settings.get("language"))
-    indent = "-i {} ".format(settings.get("indent"))
-    binop = "-bn " if settings.get("binop") else ""
-    switchcase = "-ci " if settings.get("switchcase") else ""
-    rediop = "-sr " if settings.get("rediop") else ""
-    align = "-kp " if settings.get("align") else ""
-    fnbrace = "-fn " if settings.get("fnbrace") else ""
     minify = "-mn" if (settings.get("minify") or minify) else ""
+
+    # Use settings only if use_editorconfig was not specified
+    language = '-ln "{}" '.format(settings.get("language")) if (
+        not use_editorconfig) else ""
+    indent = "-i {} ".format(settings.get("indent")) if (
+        not use_editorconfig) else ""
+    binop = "-bn " if (
+        not use_editorconfig and settings.get("binop")) else ""
+    switchcase = "-ci " if (
+        not use_editorconfig and settings.get("switchcase")) else ""
+    rediop = "-sr " if (
+        not use_editorconfig and settings.get("rediop")) else ""
+    align = "-kp " if (
+        not use_editorconfig and settings.get("align")) else ""
+    fnbrace = "-fn " if (
+        not use_editorconfig and settings.get("fnbrace")) else ""
 
     # Compose shfmt command
     command = (

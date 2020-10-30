@@ -3,6 +3,8 @@
     "format_selection_only": false, // Entire file will be used if no selection available
     "format_on_save": true,         // Invoke "Pretty Shell: Format" command on save
     "shfmt_bin_path": "shfmt",
+    "use_editorconfig": false,      // Ignore shfmt settings in order to use editorconfig
+                                    // Only simplify and minify settings are considered if this is enabled
 
     /* shfmt */
     "simplify": true,   // Simplify the code
