@@ -8,8 +8,8 @@
 # Copyright © 2019 to Present, aerobounce. All rights reserved.
 #
 
-import html
-import re
+from html import escape as escape_html
+from re import compile as compile_regex
 from subprocess import PIPE, Popen
 
 import sublime
@@ -65,7 +65,7 @@ def update_phantoms(view, stderr, region):
         PHANTOM_SETS[view_id] = sublime.PhantomSet(view, str(view_id))
 
     # Extract line and column
-    digits = re.compile(r"\d+|$").findall(stderr)
+    digits = compile_regex(r"\d+|$").findall(stderr)
     line = int(digits[0]) - 1
     column = int(digits[1]) - 1
 
@@ -74,7 +74,7 @@ def update_phantoms(view, stderr, region):
 
     # Format error message
     pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
-    stderr = re.compile(pattern).sub("", stderr)
+    stderr = compile_regex(pattern).sub("", stderr)
 
     def erase_phantom(self):
         view.erase_phantoms(str(view_id))
@@ -89,7 +89,7 @@ def update_phantoms(view, stderr, region):
                 + PHANTOM_STYLE
                 + '<div class="error-arrow"></div><div class="error">'
                 + '<span class="message">'
-                + html.escape(stderr, quote=False)
+                + escape_html(stderr, quote=False)
                 + "</span>"
                 + "<a href=hide>"
                 + chr(0x00D7)
