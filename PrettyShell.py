@@ -235,8 +235,15 @@ class PrettyShellMinifySelectionCommand(sublime_plugin.TextCommand):
 
 class PrettyShellListener(sublime_plugin.ViewEventListener):
     def on_pre_save(self):
+        settings = sublime.load_settings(SETTINGS_FILENAME)
+        has_selection = any([not r.empty() for r in self.view.sel()])
+        format_selection_only = settings.get("format_selection_only")
+
+        if not has_selection and format_selection_only:
+            return
+
         if "Bash" in self.view.settings().get("syntax"):
-            if sublime.load_settings(SETTINGS_FILENAME).get("format_on_save"):
+            if settings.get("format_on_save"):
                 self.view.run_command("pretty_shell")
 
     def on_close(self):
