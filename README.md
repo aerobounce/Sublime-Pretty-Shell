@@ -86,17 +86,17 @@ It is available via several package managers, and in pre-built binary form.<br>
 
 ```javascript
 /* Pretty Shell */
-"format_selection_only": false, // Entire file will still be formatted if there's no selection
-"format_on_save": true,
 "shfmt_bin_path": "shfmt",
+"format_on_save": true,
+"format_selection_only": false,
+"scroll_to_error_point": true,
 
-/* shfmt */
-/* (Leave these settings untouched to use shfmt's default behavior) */
+/* shfmt (Leave these untouched to use shfmt's default behavior) */
 "simplify": false,   // Simplify the code
-"minify": false,     // Minify the code to reduce its size (implies "simplify")
+"minify": false,     // Minify the code (implies "simplify")
 "language": "",      // bash / posix / mksh (default: bash)
 "indent": "",        // 0 for tabs
-"binop": false,      // Binary operators such as '&&' and '|' may start a line
+"binop": false,      // Operators such as '&&' and '|' may start a line
 "switchcase": false, // Indent switch cases
 "rediop": false,     // Redirect operators will be followed by a space
 "align": false,      // Keep column alignment paddings
