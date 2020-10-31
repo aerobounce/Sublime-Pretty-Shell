@@ -1,8 +1,9 @@
 {
     /* Pretty Shell */
-    "format_selection_only": false,
-    "format_on_save": true,
     "shfmt_bin_path": "shfmt",
+    "format_on_save": true,
+    "format_selection_only": false,
+    "scroll_to_error_point": true,
 
     /* shfmt (Leave these untouched to use shfmt's default behavior) */
     "simplify": false,   // Simplify the code

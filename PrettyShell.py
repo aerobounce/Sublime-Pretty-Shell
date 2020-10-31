@@ -84,6 +84,7 @@ def update_phantoms(view, stderr, region):
 
     phantoms = []
     point = view.text_point(line, column)
+    region = sublime.Region(point, view.line(point).b)
     phantoms.append(
         sublime.Phantom(
             sublime.Region(point, view.line(point).b),
@@ -104,6 +105,12 @@ def update_phantoms(view, stderr, region):
         )
     )
     PHANTOM_SETS[view_id].update(phantoms)
+
+    # Scroll to the syntax error point
+    if sublime.load_settings(SETTINGS_FILENAME).get("scroll_to_error_point"):
+        view.sel().clear()
+        view.sel().add(sublime.Region(point))
+        view.show_at_center(point)
 
 
 def shfmt(view, edit, use_selection, minify):
