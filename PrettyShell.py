@@ -76,6 +76,9 @@ def update_phantoms(view, stderr, region):
     pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
     stderr = compile_regex(pattern).sub("", stderr)
 
+    # Print error message to the console of ST
+    print("Pretty Shell - shfmt error: {}".format(stderr))
+
     def erase_phantom(self):
         view.erase_phantoms(str(view_id))
 
@@ -107,31 +110,41 @@ def shfmt(view, edit, use_selection, minify):
     # Load settings file
     settings = sublime.load_settings(SETTINGS_FILENAME)
 
-    # Retrieve settings (No need for nil fallback here)
-    shfmt_bin_path = "{} ".format(settings.get("shfmt_bin_path"))
-    simplify = "-s " if settings.get("simplify") else ""
-    language = '-ln "{}" '.format(settings.get("language"))
-    indent = "-i {} ".format(settings.get("indent"))
-    binop = "-bn " if settings.get("binop") else ""
-    switchcase = "-ci " if settings.get("switchcase") else ""
-    rediop = "-sr " if settings.get("rediop") else ""
-    align = "-kp " if settings.get("align") else ""
-    fnbrace = "-fn " if settings.get("fnbrace") else ""
-    minify = "-mn" if (settings.get("minify") or minify) else ""
+    # Build command to execute
+    command = ""
+    settings_keys = [
+        ("shfmt_bin_path", "shfmt_bin_path"),
+        ("simplify", "s"),
+        ("language", "ln"),
+        ("indent", "i"),
+        ("binop", "bn"),
+        ("switchcase", "ci"),
+        ("rediop", "sr"),
+        ("align", "kp"),
+        ("fnbrace", "fn"),
+        ("minify", "mn"),
+    ]
 
-    # Compose shfmt command
-    command = (
-        shfmt_bin_path
-        + simplify
-        + language
-        + indent
-        + binop
-        + switchcase
-        + rediop
-        + align
-        + fnbrace
-        + minify
-    )
+    # Parse settings
+    for tupl in settings_keys:
+        key = tupl[0]
+        value = settings.get(key)
+        option = tupl[1]
+
+        # Binary path
+        if key == "shfmt_bin_path":
+            command += "{}".format(value)
+
+        # CLI options with value
+        elif (key == "language" or key == "indent") and value:
+            command += ' -{0} "{1}"'.format(option, value)
+
+        # CLI options
+        elif value:
+            command += " -{0}".format(option)
+
+    # Print command to be executed to the console of ST
+    print("Pretty Shell executed command: {}".format(command))
 
     # ** For Windows platform only - UNC path error workaround **
     # ** "CMD does not support UNC paths as current directories." **
