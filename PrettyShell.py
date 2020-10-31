@@ -133,9 +133,12 @@ def shfmt(view, edit, use_selection, minify):
         + minify
     )
 
-    # Specify cwd to Popen to work with WSL properly
-    # Workaround for `CMD does not support UNC paths as current directories.` error
-    # This doesn't have to be a specific path as long as it's non UNC path
+    # ** For Windows platform only - UNC path error workaround **
+    # ** "CMD does not support UNC paths as current directories." **
+    # ** This may not be needed in Sublime Text 4 **
+    #
+    # Popen needs non UNC `cwd` to be specified.
+    # Seems `cwd` doesn't have to be a specific path as long as it's non UNC path
     cwd = sublime.packages_path()
 
     # Format
