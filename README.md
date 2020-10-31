@@ -1,46 +1,56 @@
-## 🐚 Pretty Shell
+<h1 align="center">🐚 Pretty Shell</h1>
+<h3 align="center">Shell Script Formatter / Syntax Checker for Sublime Text 3</h3>
 
-> Shell Script Formatter / Syntax Checker for Sublime Text 3<br>
-> For Every Shell Scripters.<br>
-> [Available via Package Control](https://packagecontrol.io/packages/Pretty%20Shell)
+<p align="center">
+    <img src="https://img.shields.io/badge/Linux-yellow.svg" />
+    <img src="https://img.shields.io/badge/macOS-blue.svg" />
+    <img src="https://img.shields.io/badge/Windows-green.svg" />
+    <img src="https://img.shields.io/badge/Sublime Text-3-brightgreen.svg" />
+</p>
 
-<table width="100%" style="border-spacing: 0px;">
-<tr>
-    <th><b>🚅 Blazingly Fast Formatting / Minifying</b></th>
-    <th><b><a href="https://github.com/mvdan/sh#replacing-bash--n">🚦 Syntax Checking</a></b></th>
-</tr>
-<tr>
-    <td colspan="2" style="padding: 0px; margin: 0px;">
-        <img src="https://user-images.githubusercontent.com/10491362/78775969-0c057a00-79d2-11ea-942e-582f81849491.gif" style="display: block; width: 100%;" />
-    </td>
-</tr>
-</table>
+<p align="center">
+    <b>⚡️Blazingly Fast Formatting / Minifying</b><br>
+    <b>❗️User Friendly Syntax Error Indication</b><br>
+    <b><a href="https://github.com/mvdan/sh#replacing-bash--n">🚦 Syntax Checking</a></b><br>
+    <img src="https://user-images.githubusercontent.com/10491362/78775969-0c057a00-79d2-11ea-942e-582f81849491.gif" style="display: block; width: 100%;" />
+</p>
+
+
+---
 
 
 ## 📦 Install
-1. <kbd>Package Control: Install Package</kbd>
-2. Type <kbd>PrettyShell</kbd> and Install
-3. You're ready to script.
-4. Recommended to use [SublimeLinter-shellcheck](https://packagecontrol.io/packages/SublimeLinter-shellcheck).
 
-<blockquote>
-<b>Manual Install</b>
+- [Available via Package Control][packagecontrol]
+1. `Package Control: Install Package`
+2. Type `Pretty Shell` and Install
+
+#### Manual Install
+
+1. Clone this repository as shown below (**Note that target directory name must be `Pretty Shell`**)
+2. You're ready (Restart Sublime Text if the package is not recognized)
 
 ```sh
-# 1. Clone this repository as shown below
-# 2. You're ready (Restart Sublime Text if the package is not recognized)
-
-# Example on macOS (It should work on Linux / Windows too.
-# Follow the same steps with the equivalent clone target directory)
+# Example on macOS
+# In other platforms, follow the same steps with the equivalent clone target directory
 
 cd "$HOME/Library/Application Support/Sublime Text 3/Packages"
 git clone https://github.com/aerobounce/Sublime-Pretty-Shell.git "Pretty Shell"
 ```
 
-</blockquote>
 
 ## ⚠️ Dependency
-Pretty Shell **does not work without `shfmt`** as this package utilizes the formatter.<br>
+
+- **macOS Users**
+    - If your default shell does not have the path to `shfmt`, you need to specify it in the settings.
+- **\*nix / Windows Users**
+    - You need to specify the path to `shfmt` in the settings.
+- Example
+    ```
+    "shfmt_bin_path": "Absolute Path to shfmt"
+    ```
+
+**Pretty Shell does not work without `shfmt` as this package utilizes the formatter.**<br>
 It is available via several package managers, and in pre-built binary form.<br>
 
 - **macOS**
@@ -59,46 +69,47 @@ It is available via several package managers, and in pre-built binary form.<br>
 - **Pre-Built Binary Releases**
     - [mvdan/sh/releases](https://github.com/mvdan/sh/releases)
 
-> If Sublime Text does not recognize `shfmt`, specify the absolute path in the settings:
->
-> ```JavaScript
-> "shfmt_bin_path": "Absolute Path to shfmt"
-> ```
 
 ## 📝 Available Commands
 
-| Caption                                   | Command                         | Default Key Bindings                                              |
-| ----------------------------------------- | ------------------------------- | ----------------------------------------------------------------- |
-| <kbd>Pretty Shell: Format</kbd>           | `pretty_shell`                  | <kbd>cmd</kbd> or <kbd>alt</kbd> + <kbd>ctrl</kbd> + <kbd>s</kbd> |
-| <kbd>Pretty Shell: Format Selection</kbd> | `pretty_shell_selection`        | None                                                              |
-| <kbd>Pretty Shell: Minify</kbd>           | `pretty_shell_minify`           | None                                                              |
-| <kbd>Pretty Shell: Minify Selection</kbd> | `pretty_shell_minify_selection` | None                                                              |
+> **Command** is the name of the command you can use for **Key-Bindings**.
 
-- **Command** is the name of the command you can use for **Key-Bindings**.
-- Be aware that any manual modifications with `Format Selection` commands might be lost upon saving a file if `format_on_save` is `true`, which it is by default.
+| Caption                            | Command                         | Default Key Bindings   |
+| ---------------------------------- | ------------------------------- | ---------------------- |
+| **Pretty Shell: Format**           | `pretty_shell`                  | (CMD / Alt) + Ctrl + S |
+| **Pretty Shell: Format Selection** | `pretty_shell_selection`        | None                   |
+| **Pretty Shell: Minify**           | `pretty_shell_minify`           | None                   |
+| **Pretty Shell: Minify Selection** | `pretty_shell_minify_selection` | None                   |
+
 
 ## 🛠 Default Settings
 
 ```javascript
 /* Pretty Shell */
-"format_selection_only": false, // Entire file will be used if no selection available
-"format_on_save": true,         // Invoke "Pretty Shell: Format" command on save
+"format_selection_only": false, // Entire file will still be formatted if there's no selection
+"format_on_save": true,
 "shfmt_bin_path": "shfmt",
 
 /* shfmt */
-"simplify": true,   // Simplify the code
-"minify": false,    // Minify the code to reduce its size (implies "simplify")
-"language": "bash", // Language variant to parse (bash / posix / mksh)
-"indent": 4,        // 0 for tabs
-"binop": false,     // Binary operators such as '&&' and '|' may start a line
-"switchcase": true, // Indent switch cases
-"rediop": true,     // Redirect operators will be followed by a space
-"align": false,     // Keep column alignment paddings
-"fnbrace": false    // Place function opening braces on a separate line
+/* (Leave these settings untouched to use shfmt's default behavior) */
+"simplify": false,   // Simplify the code
+"minify": false,     // Minify the code to reduce its size (implies "simplify")
+"language": "",      // bash / posix / mksh (default: bash)
+"indent": "",        // 0 for tabs
+"binop": false,      // Binary operators such as '&&' and '|' may start a line
+"switchcase": false, // Indent switch cases
+"rediop": false,     // Redirect operators will be followed by a space
+"align": false,      // Keep column alignment paddings
+"fnbrace": false     // Place function opening braces on a separate line
 ```
 
 ## 🤝 Thank you
 
-- [dzhibas/SublimePrettyJson](https://github.com/dzhibas/SublimePrettyJson) — Inspired by this project
-- [mvdan/sh](https://github.com/mvdan/sh) — Pretty Shell is powerd by shfmt, the quality formatter
-- [realm/strip-frameworks.sh](https://github.com/realm/realm-cocoa/blob/master/scripts/strip-frameworks.sh) — Script used in the demo gif
+- [dzhibas/SublimePrettyJson][prettyjson] — Inspired by this project
+- [mvdan/sh][shfmt] — Pretty Shell is powerd by shfmt, the quality formatter
+- [realm/strip-frameworks.sh][realm] — Script used in the demo gif
+
+[packagecontrol]: https://packagecontrol.io/packages/Pretty%20Shell
+[shfmt]: https://github.com/mvdan/sh
+[realm]: https://github.com/realm/realm-cocoa/blob/master/scripts/strip-frameworks.sh
+[prettyjson]: https://github.com/dzhibas/SublimePrettyJson
