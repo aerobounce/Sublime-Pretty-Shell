@@ -1,0 +1,25 @@
+v1.4.0
+
+✨ New:
+    • "scroll_to_error_point" option added. Enabled by default.
+    • Users can use shfmt's default behavior by not specifying any options.
+    • Prints command to be executed to console before formatting.
+    • Prints error occured to console.
+
+❗️ Changes:
+    • [Breaking Change]
+        1. Default settings does not specify any options no longer.
+           If you were used to rely on it, you can use below to reproduce the old default settings:
+
+               "simplify": true,
+               "language": "bash",
+               "indent": "4",
+               "switchcase": true,
+               "rediop": true
+
+        2. "indent" option's value is string now.
+
+✅ Fixed:
+    • "format_selection_only" option now consistently formats selection only, even if "format_on_save" is true.
+    • Default settings was using old key. (#3)
+    • [Windows] UNC path error should be suppressed now. (#4)
