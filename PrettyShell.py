@@ -16,6 +16,7 @@ import sublime
 import sublime_plugin
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
+PHANTOM_SETS = {}
 PHANTOM_STYLE = """
 <style>
     div.error-arrow {
@@ -48,7 +49,6 @@ PHANTOM_STYLE = """
     }
 </style>
 """
-PHANTOM_SETS = {}
 
 
 def update_phantoms(view, stderr, region):
