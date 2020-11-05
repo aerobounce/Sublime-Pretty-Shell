@@ -246,7 +246,7 @@ class PrettyShellListener(sublime_plugin.ViewEventListener):
         has_selection = any([not r.empty() for r in self.view.sel()])
         format_selection_only = settings.get("format_selection_only")
 
-        if not has_selection and format_selection_only:
+        if format_selection_only and not has_selection:
             return
 
         if "Bash" in self.view.settings().get("syntax"):
