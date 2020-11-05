@@ -14,7 +14,7 @@
                                 "command": "edit_settings",
                                 "args": {
                                     "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-                                    "default": "{\n    \"format_on_save\": true\n}"
+                                    "default": "{\n    \"shfmt_bin_path\": \"shfmt\"\n}"
                                 }
                             },
                             {
