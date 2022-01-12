@@ -19,9 +19,10 @@
 
 - ✨ Format on save
 - Format selection
-- Syntax errors are shown in popup with messages
-    - ✨ Popup will be presented at the point error occured
-- ✨ Auto-scroll to the point where the syntax error occured
+- ❗️ Syntax errors are shown inline, at the point error occured
+    - You will be able to see where parsing stopped at a glance
+    - It does not use a panel nor it conflicts with other linters
+- ✨ Auto-scroll to the point where parsing error occured
 
 
 # Install
