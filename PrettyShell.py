@@ -150,9 +150,6 @@ def shfmt(view, edit, use_selection, minify):
         elif value:
             command += " -{0}".format(option)
 
-    # Print command to be executed to the console of ST
-    print("Pretty Shell executed command: {}".format(command))
-
     # ** For Windows platform only - UNC path error workaround **
     # ** "CMD does not support UNC paths as current directories." **
     # ** This may not be needed in Sublime Text 4 **
@@ -164,10 +161,15 @@ def shfmt(view, edit, use_selection, minify):
     # Format
 
     def format_text(target_text, selection, region):
+        # If string is empty, just return
+        if not target_text:
+            return
+
+        # Print command to be executed to the console of ST
+        print("Pretty Shell executed command: {}".format(command))
+
         # Open subprocess with the command
-        with Popen(
-            command, cwd=cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE
-        ) as popen:
+        with Popen(command, cwd=cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             # Write selection into stdin, then ensure the descriptor is closed
             popen.stdin.write(target_text.encode("utf-8"))
             popen.stdin.close()
