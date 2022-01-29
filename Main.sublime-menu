@@ -14,13 +14,8 @@
                                 "command": "edit_settings",
                                 "args": {
                                     "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-                                    "default": "{\n    \"shfmt_bin_path\": \"shfmt\"\n}"
+                                    "default": "{\n\n}"
                                 }
-                            },
-                            {
-                                "caption": "Key Bindings",
-                                "command": "edit_settings",
-                                "args": { "base_file": "${packages}/Pretty Shell/Default ($platform).sublime-keymap" }
                             }
                         ]
                     }

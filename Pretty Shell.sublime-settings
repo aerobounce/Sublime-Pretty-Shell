@@ -1,18 +1,31 @@
 {
-    /* Pretty Shell */
+    // Binary path.
     "shfmt_bin_path": "shfmt",
+    // Run format command on save.
     "format_on_save": true,
-    "format_selection_only": false,
+    // Enable inline error popup.
+    "show_error_inline": true,
+    // Scroll to the syntax error point.
     "scroll_to_error_point": true,
-
-    /* shfmt (Leave these untouched to use shfmt's default behavior) */
-    "simplify": false,   // Simplify the code
-    "minify": false,     // Minify the code (implies "simplify")
-    "language": "",      // bash / posix / mksh (default: bash)
-    "indent": "",        // 0 for tabs
-    "binop": false,      // Operators such as '&&' and '|' may start a line
-    "switchcase": false, // Indent switch cases
-    "rediop": false,     // Redirect operators will be followed by a space
-    "align": false,      // Keep column alignment paddings
-    "fnbrace": false     // Place function opening braces on a separate line
+    /**
+     * shfmt options (leave to use default behavior)
+     */
+    // Simplify the code
+    "simplify": false,
+    // Minify the code (implies "simplify")
+    "minify": false,
+    // bash/posix/mksh/bats (default: bash)
+    "language": "",
+    // 0 for tabs (default), >0 for number of spaces
+    "indent": "",
+    // Operators such as '&&' and '|' may start a line
+    "binop": false,
+    // Indent switch cases
+    "switchcase": false,
+    // Redirect operators will be followed by a space
+    "rediop": false,
+    // Keep column alignment paddings
+    "align": false,
+    // Place function opening braces on a separate line
+    "fnbrace": false
 }

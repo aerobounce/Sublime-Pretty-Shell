@@ -5,18 +5,20 @@
 #
 # AGPLv3 License
 # Created by github.com/aerobounce on 2019/11/18.
-# Copyright © 2019 to Present, aerobounce. All rights reserved.
+# Copyright © 2019-2022, aerobounce. All rights reserved.
 #
 
-from html import escape as escape_html
-from re import compile as compile_regex
+from html import escape
+from re import compile
 from subprocess import PIPE, Popen
 
-import sublime
-import sublime_plugin
+from sublime import Edit, LAYOUT_BELOW, Phantom, PhantomSet, Region, View
+from sublime import error_message, load_settings, packages_path
+from sublime_plugin import TextCommand, ViewEventListener
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
-PHANTOM_SETS = {}
+ON_CHANGE_TAG = "reload_settings"
+UTF_8 = "utf-8"
 PHANTOM_STYLE = """
 <style>
     div.error-arrow {
@@ -50,222 +52,183 @@ PHANTOM_STYLE = """
 </style>
 """
 
+def plugin_loaded():
+    PrettyShell.settings = load_settings(SETTINGS_FILENAME)
+    PrettyShell.reload_settings()
+    PrettyShell.settings.add_on_change(ON_CHANGE_TAG, PrettyShell.reload_settings)
 
-def update_phantoms(view, stderr, region):
-    view_id = view.id()
-
-    view.erase_phantoms(str(view_id))
-    if view_id in PHANTOM_SETS:
-        PHANTOM_SETS.pop(view_id)
-
-    if not stderr:
-        return
-
-    if not view_id in PHANTOM_SETS:
-        PHANTOM_SETS[view_id] = sublime.PhantomSet(view, str(view_id))
-
-    # Extract line and column
-    digits = compile_regex(r"\d+|$").findall(stderr)
-    line = int(digits[0]) - 1
-    column = int(digits[1]) - 1
-
-    if region:
-        line += view.rowcol(region.begin())[0]
-
-    # Format error message
-    pattern = "<standard input>:[0-9]{1,}:[0-9]{1,}:."
-    stderr = compile_regex(pattern).sub("", stderr)
-
-    # Print error message to the console of ST
-    print("Pretty Shell - shfmt error: {}".format(stderr))
-
-    def erase_phantom(self):
-        view.erase_phantoms(str(view_id))
-
-    phantoms = []
-    point = view.text_point(line, column)
-    region = sublime.Region(point, view.line(point).b)
-    phantoms.append(
-        sublime.Phantom(
-            sublime.Region(point, view.line(point).b),
-            (
-                "<body id=inline-error>"
-                + PHANTOM_STYLE
-                + '<div class="error-arrow"></div><div class="error">'
-                + '<span class="message">'
-                + escape_html(stderr, quote=False)
-                + "</span>"
-                + "<a href=hide>"
-                + chr(0x00D7)
-                + "</a></div>"
-                + "</body>"
-            ),
-            sublime.LAYOUT_BELOW,
-            on_navigate=erase_phantom,
-        )
-    )
-    PHANTOM_SETS[view_id].update(phantoms)
-
-    # Scroll to the syntax error point
-    if sublime.load_settings(SETTINGS_FILENAME).get("scroll_to_error_point"):
-        view.sel().clear()
-        view.sel().add(sublime.Region(point))
-        view.show_at_center(point)
+def plugin_unloaded():
+    PrettyShell.settings.clear_on_change(ON_CHANGE_TAG)
 
 
-def shfmt(view, edit, use_selection, minify):
-    # Load settings file
-    settings = sublime.load_settings(SETTINGS_FILENAME)
+class PrettyShell:
+    settings = load_settings(SETTINGS_FILENAME)
+    phantom_sets = {}
+    shell_command = ""
+    shell_cwd = ""
+    format_on_save = True
+    show_error_inline = True
+    scroll_to_error_point = True
 
-    # Build command to execute
-    command = ""
-    settings_keys = [
-        ("shfmt_bin_path", "shfmt_bin_path"),
-        ("simplify", "s"),
-        ("language", "ln"),
-        ("indent", "i"),
-        ("binop", "bn"),
-        ("switchcase", "ci"),
-        ("rediop", "sr"),
-        ("align", "kp"),
-        ("fnbrace", "fn"),
-        ("minify", "mn"),
-    ]
+    @classmethod
+    def reload_settings(cls):
+        cls.format_on_save = cls.settings.get("format_on_save")
+        cls.show_error_inline = cls.settings.get("show_error_inline")
+        cls.scroll_to_error_point = cls.settings.get("scroll_to_error_point")
 
-    # Parse settings
-    for tupl in settings_keys:
-        key = tupl[0]
-        value = settings.get(key)
-        option = tupl[1]
+        shfmt_bin_path = cls.settings.get("shfmt_bin_path")
+        simplify = cls.settings.get("simplify")
+        minify = cls.settings.get("minify")
+        language = cls.settings.get("language")
+        indent = cls.settings.get("indent")
+        binop = cls.settings.get("binop")
+        switchcase = cls.settings.get("switchcase")
+        rediop = cls.settings.get("rediop")
+        align = cls.settings.get("align")
+        fnbrace = cls.settings.get("fnbrace")
 
-        # Binary path
-        if key == "shfmt_bin_path":
-            command += "{}".format(value)
+        cls.shell_command = shfmt_bin_path
+        if simplify: cls.shell_command += " -s"
+        if minify: cls.shell_command += " -mn"
+        if language: cls.shell_command += ' -ln "{}"'.format(language)
+        if indent: cls.shell_command += " -i {}".format(indent)
+        if binop: cls.shell_command += " -bn"
+        if switchcase: cls.shell_command += " -ci"
+        if rediop: cls.shell_command += " -sr"
+        if align: cls.shell_command += " -kp"
+        if fnbrace: cls.shell_command += " -fn"
 
-        # CLI options with value
-        elif (key == "language" or key == "indent") and value:
-            command += ' -{0} "{1}"'.format(option, value)
+        # Note: For Windows only, UNC path error workaround.
+        # ("CMD does not support UNC paths as current directories.")
+        # This may not be needed in Sublime Text 4.
+        #
+        # Popen needs non UNC `cwd` to be specified.
+        # It seems `cwd` can be any path as long as it's a non UNC path
+        cls.shell_cwd = packages_path()
 
-        # CLI options
-        elif value:
-            command += " -{0}".format(option)
-
-    # ** For Windows platform only - UNC path error workaround **
-    # ** "CMD does not support UNC paths as current directories." **
-    # ** This may not be needed in Sublime Text 4 **
-    #
-    # Popen needs non UNC `cwd` to be specified.
-    # Seems `cwd` doesn't have to be a specific path as long as it's non UNC path
-    cwd = sublime.packages_path()
-
-    # Format
-
-    def format_text(target_text, selection, region):
-        # If string is empty, just return
-        if not target_text:
+    @classmethod
+    def parse_error_point(cls, view: View, stderr: str):
+        digits = compile(r"\d+|$").findall(stderr)
+        if not stderr:
             return
+        line = int(digits[0]) - 1
+        column = int(digits[1]) - 1
+        return view.text_point(line, column)
 
-        # Print command to be executed to the console of ST
-        print("Pretty Shell executed command: {}".format(command))
+    @classmethod
+    def update_phantoms(cls, view: View, stderr: str, error_point: int):
+        view_id = view.id()
 
-        # Open subprocess with the command
-        with Popen(command, cwd=cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
-            # Write selection into stdin, then ensure the descriptor is closed
-            popen.stdin.write(target_text.encode("utf-8"))
+        if not view_id in cls.phantom_sets:
+            cls.phantom_sets[view_id] = PhantomSet(view, str(view_id))
+
+        # Create Phantom
+        def phantom_content():
+            # Remove unneeded text from stderr
+            error_message = compile(r"[0-9]{1,}:[0-9]{1,}:.").sub("", stderr)
+            return ("<body id=inline-error>"
+                    + PHANTOM_STYLE
+                    + '<div class="error-arrow"></div><div class="error">'
+                    + '<span class="message">'
+                    + escape(error_message, quote=False)
+                    + "</span>"
+                    + "<a href=hide>"
+                    + chr(0x00D7)
+                    + "</a></div>"
+                    + "</body>")
+        new_phantom = Phantom(
+            Region(error_point, view.line(error_point).b),
+            phantom_content(),
+            LAYOUT_BELOW,
+            lambda _: view.erase_phantoms(str(view_id)),
+        )
+        # Store Phantom
+        cls.phantom_sets[view_id].update([new_phantom])
+
+    @classmethod
+    def execute_shell(cls, target_text: str):
+        # Empty check
+        if not target_text: return
+        # Execute shfmt in a new process
+        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True,
+                   stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
+            # Nil check to suppress linter
+            if not popen.stdin: return
+            if not popen.stdout: return
+            if not popen.stderr: return
+            # Write target_text into stdin and ensure the descriptor is closed
+            popen.stdin.write(target_text.encode(UTF_8))
             popen.stdin.close()
             # Read stdout and stderr
-            stdout = popen.stdout.read().decode("utf-8")
-            stderr = popen.stderr.read().decode("utf-8")
+            stdout = popen.stdout.read().decode(UTF_8)
+            stderr = popen.stderr.read().decode(UTF_8)
+            stderr = stderr.replace("<standard input>:", "")
+            stderr = stderr.replace("\n", "")
+            # Print command executed to the console
+            print("[Pretty Shell] Popen:", cls.shell_command)
+            # Print error
+            if stderr:
+                print("[Pretty Shell] Error:", stderr)
 
-            # Replace with result if only stderr is empty
-            if not stderr:
-                view.replace(edit, selection, stdout)
+            return stdout, stderr
 
-            # Present alert if 'shfmt' not found
-            if "not found" in stderr:
-                sublime.error_message(
-                    "Pretty Shell - Error:\n"
-                    + stderr
-                    + "Specify absolute path to 'shfmt' in settings"
-                )
-                return stderr
+    @classmethod
+    def execute_format(cls, view: View, edit: Edit):
+        # Get entire string
+        entire_region = Region(0, view.size())
+        entire_text = view.substr(entire_region)
 
-            # Present alert of unknown error
-            if stderr and not "standard input" in stderr:
-                sublime.error_message("Pretty Shell - Error:\n" + stderr)
-                return stderr
+        # Early return
+        if not entire_text: return
 
-            # Update Phantoms
-            update_phantoms(view, stderr, region)
+        # Execute shell and get output
+        output = cls.execute_shell(entire_text) or ("", "")
+        stdout = output[0]
+        stderr = output[1]
 
-            return stderr
-
-    # Store original viewport position
-    original_viewport_position = view.viewport_position()
-
-    # Prevent needles iteration AMAP
-    has_selection = any([not r.empty() for r in view.sel()])
-    if (settings.get("format_selection_only") or use_selection) and has_selection:
-        for region in view.sel():
-            if region.empty():
-                continue
-
-            # Break at the first error
-            if format_text(view.substr(region), region, region):
-                break
-
-    else:
-        # Don't format entire file when use_selection is true
-        if use_selection:
+        # Present alert for 'command not found'
+        if "command not found" in stderr:
+            error_message("Pretty Shell\n" + stderr)
             return
 
-        # Use entire region/string of view
-        selection = sublime.Region(0, view.size())
-        target_text = view.substr(selection)
-        format_text(target_text, selection, None)
+        # Store original viewport position
+        original_viewport_position = view.viewport_position()
 
-    # Restore viewport position only if it's appropriate
-    if PHANTOM_SETS and sublime.load_settings(SETTINGS_FILENAME).get("scroll_to_error_point"):
-        return
+        # Replace with stdout only if stderr is empty
+        if stdout and not stderr:
+            view.replace(edit, entire_region, stdout)
 
-    view.set_viewport_position((0, 0), False)
-    view.set_viewport_position(original_viewport_position, False)
+        # Parse possible error point
+        error_point = cls.parse_error_point(view, stderr)
+
+        # Update Phantoms
+        view.erase_phantoms(str(view.id()))
+        if cls.show_error_inline and error_point:
+            cls.update_phantoms(view, stderr, error_point)
+
+        # Scroll to the syntax error point
+        if cls.scroll_to_error_point and error_point:
+            view.sel().clear()
+            view.sel().add(Region(error_point))
+            view.show_at_center(error_point)
+        else:
+            # Restore viewport position
+            view.set_viewport_position((0, 0), False)
+            view.set_viewport_position(original_viewport_position, False)
 
 
-class PrettyShellCommand(sublime_plugin.TextCommand):
+class PrettyShellCommand(TextCommand):
     def run(self, edit):
-        shfmt(self.view, edit, False, False)
+        PrettyShell.execute_format(self.view, edit)
 
-
-class PrettyShellSelectionCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        shfmt(self.view, edit, True, False)
-
-
-class PrettyShellMinifyCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        shfmt(self.view, edit, False, True)
-
-
-class PrettyShellMinifySelectionCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        shfmt(self.view, edit, True, True)
-
-
-class PrettyShellListener(sublime_plugin.ViewEventListener):
+class PrettyShellListener(ViewEventListener):
     def on_pre_save(self):
-        settings = sublime.load_settings(SETTINGS_FILENAME)
-        has_selection = any([not r.empty() for r in self.view.sel()])
-        format_selection_only = settings.get("format_selection_only")
-
-        if format_selection_only and not has_selection:
-            return
-
-        if "Bash" in self.view.settings().get("syntax"):
-            if settings.get("format_on_save"):
+        if PrettyShell.format_on_save:
+            if "Bash" in self.view.settings().get("syntax"):
                 self.view.run_command("pretty_shell")
 
     def on_close(self):
         view_id = self.view.id()
-        if view_id in PHANTOM_SETS:
-            PHANTOM_SETS.pop(view_id)
+
+        if view_id in PrettyShell.phantom_sets:
+            PrettyShell.phantom_sets.pop(view_id)
