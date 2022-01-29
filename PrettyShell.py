@@ -166,9 +166,6 @@ class PrettyShell:
             stderr = stderr.replace("\n", "")
             # Print command executed to the console
             print("[Pretty Shell] Popen:", cls.shell_command)
-            # Print error
-            if stderr:
-                print("[Pretty Shell] Error:", stderr)
 
             return stdout, stderr
 
@@ -198,6 +195,10 @@ class PrettyShell:
         if stderr and not error_point:
             alert("Pretty Shell\n"+ stderr)
             return
+
+        # Print parsing error
+        if error_point:
+            print("[Pretty Shell]", stderr)
 
         # Store original viewport position
         original_viewport_position = view.viewport_position()
