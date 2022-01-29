@@ -13,7 +13,7 @@ from re import compile
 from subprocess import PIPE, Popen
 
 from sublime import Edit, LAYOUT_BELOW, Phantom, PhantomSet, Region, View
-from sublime import error_message, load_settings, packages_path
+from sublime import error_message as alert, load_settings, packages_path
 from sublime_plugin import TextCommand, ViewEventListener
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
@@ -109,7 +109,7 @@ class PrettyShell:
     @classmethod
     def parse_error_point(cls, view: View, stderr: str):
         digits = compile(r"\d+|$").findall(stderr)
-        if not stderr:
+        if not stderr or not digits[0]:
             return
         line = int(digits[0]) - 1
         column = int(digits[1]) - 1
@@ -188,7 +188,15 @@ class PrettyShell:
 
         # Present alert for 'command not found'
         if "command not found" in stderr:
-            error_message("Pretty Shell\n" + stderr)
+            alert("Pretty Shell\n" + stderr)
+            return
+
+        # Parse possible error point
+        error_point = cls.parse_error_point(view, stderr)
+
+        # Present alert for other errors
+        if stderr and not error_point:
+            alert("Pretty Shell\n"+ stderr)
             return
 
         # Store original viewport position
@@ -197,9 +205,6 @@ class PrettyShell:
         # Replace with stdout only if stderr is empty
         if stdout and not stderr:
             view.replace(edit, entire_region, stdout)
-
-        # Parse possible error point
-        error_point = cls.parse_error_point(view, stderr)
 
         # Update Phantoms
         view.erase_phantoms(str(view.id()))
