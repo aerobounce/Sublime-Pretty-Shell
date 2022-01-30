@@ -76,7 +76,6 @@ class PrettyShell:
         cls.show_error_inline = cls.settings.get("show_error_inline")
         cls.scroll_to_error_point = cls.settings.get("scroll_to_error_point")
 
-        shfmt_bin_path = cls.settings.get("shfmt_bin_path")
         simplify = cls.settings.get("simplify")
         minify = cls.settings.get("minify")
         language = cls.settings.get("language")
@@ -87,7 +86,7 @@ class PrettyShell:
         align = cls.settings.get("align")
         fnbrace = cls.settings.get("fnbrace")
 
-        cls.shell_command = shfmt_bin_path
+        cls.shell_command = cls.settings.get("shfmt_bin_path")
         if simplify: cls.shell_command += " -s"
         if minify: cls.shell_command += " -mn"
         if language: cls.shell_command += ' -ln "{}"'.format(language)
@@ -105,15 +104,6 @@ class PrettyShell:
         # Popen needs non UNC `cwd` to be specified.
         # It seems `cwd` can be any path as long as it's a non UNC path
         cls.shell_cwd = packages_path()
-
-    @classmethod
-    def parse_error_point(cls, view: View, stderr: str):
-        digits = compile(r"\d+|$").findall(stderr)
-        if not stderr or not digits[0]:
-            return
-        line = int(digits[0]) - 1
-        column = int(digits[1]) - 1
-        return view.text_point(line, column)
 
     @classmethod
     def update_phantoms(cls, view: View, stderr: str, error_point: int):
@@ -145,29 +135,14 @@ class PrettyShell:
         # Store Phantom
         cls.phantom_sets[view_id].update([new_phantom])
 
-    @classmethod
-    def execute_shell(cls, target_text: str):
-        # Empty check
-        if not target_text: return
-        # Execute shfmt in a new process
-        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True,
-                   stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
-            # Nil check to suppress linter
-            if not popen.stdin: return
-            if not popen.stdout: return
-            if not popen.stderr: return
-            # Write target_text into stdin and ensure the descriptor is closed
-            popen.stdin.write(target_text.encode(UTF_8))
-            popen.stdin.close()
-            # Read stdout and stderr
-            stdout = popen.stdout.read().decode(UTF_8)
-            stderr = popen.stderr.read().decode(UTF_8)
-            stderr = stderr.replace("<standard input>:", "")
-            stderr = stderr.replace("\n", "")
-            # Print command executed to the console
-            print("[Pretty Shell] Popen:", cls.shell_command)
-
-            return stdout, stderr
+    @staticmethod
+    def parse_error_point(view: View, stderr: str):
+        digits = compile(r"\d+|$").findall(stderr)
+        if not stderr or not digits[0]:
+            return
+        line = int(digits[0]) - 1
+        column = int(digits[1]) - 1
+        return view.text_point(line, column)
 
     @classmethod
     def execute_format(cls, view: View, edit: Edit):
@@ -179,9 +154,23 @@ class PrettyShell:
         if not entire_text: return
 
         # Execute shell and get output
-        output = cls.execute_shell(entire_text) or ("", "")
-        stdout = output[0]
-        stderr = output[1]
+        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True,
+                   stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
+            # Nil check to suppress linter
+            if not popen.stdin: return
+            if not popen.stdout: return
+            if not popen.stderr: return
+            # Write target_text into stdin and ensure the descriptor is closed
+            popen.stdin.write(entire_text.encode(UTF_8))
+            popen.stdin.close()
+            # Read stdout and stderr
+            stdout = popen.stdout.read().decode(UTF_8)
+            stderr = popen.stderr.read().decode(UTF_8)
+            stderr = stderr.replace("<standard input>:", "")
+            stderr = stderr.replace("\n", "")
+
+        # Print command executed to the console
+        print("[Pretty Shell] Popen:", cls.shell_command)
 
         # Present alert for 'command not found'
         if "command not found" in stderr:
