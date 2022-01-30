@@ -52,10 +52,12 @@ PHANTOM_STYLE = """
 </style>
 """
 
+
 def plugin_loaded():
     PrettyShell.settings = load_settings(SETTINGS_FILENAME)
     PrettyShell.reload_settings()
     PrettyShell.settings.add_on_change(ON_CHANGE_TAG, PrettyShell.reload_settings)
+
 
 def plugin_unloaded():
     PrettyShell.settings.clear_on_change(ON_CHANGE_TAG)
@@ -87,15 +89,24 @@ class PrettyShell:
         fnbrace = cls.settings.get("fnbrace")
 
         cls.shell_command = cls.settings.get("shfmt_bin_path")
-        if simplify: cls.shell_command += " -s"
-        if minify: cls.shell_command += " -mn"
-        if language: cls.shell_command += ' -ln "{}"'.format(language)
-        if indent: cls.shell_command += " -i {}".format(indent)
-        if binop: cls.shell_command += " -bn"
-        if switchcase: cls.shell_command += " -ci"
-        if rediop: cls.shell_command += " -sr"
-        if align: cls.shell_command += " -kp"
-        if fnbrace: cls.shell_command += " -fn"
+        if simplify:
+            cls.shell_command += " -s"
+        if minify:
+            cls.shell_command += " -mn"
+        if language:
+            cls.shell_command += ' -ln "{}"'.format(language)
+        if indent:
+            cls.shell_command += " -i {}".format(indent)
+        if binop:
+            cls.shell_command += " -bn"
+        if switchcase:
+            cls.shell_command += " -ci"
+        if rediop:
+            cls.shell_command += " -sr"
+        if align:
+            cls.shell_command += " -kp"
+        if fnbrace:
+            cls.shell_command += " -fn"
 
         # Note: For Windows only, UNC path error workaround.
         # ("CMD does not support UNC paths as current directories.")
@@ -116,16 +127,19 @@ class PrettyShell:
         def phantom_content():
             # Remove unneeded text from stderr
             error_message = compile(r"[0-9]{1,}:[0-9]{1,}:.").sub("", stderr)
-            return ("<body id=inline-error>"
-                    + PHANTOM_STYLE
-                    + '<div class="error-arrow"></div><div class="error">'
-                    + '<span class="message">'
-                    + escape(error_message, quote=False)
-                    + "</span>"
-                    + "<a href=hide>"
-                    + chr(0x00D7)
-                    + "</a></div>"
-                    + "</body>")
+            return (
+                "<body id=inline-error>"
+                + PHANTOM_STYLE
+                + '<div class="error-arrow"></div><div class="error">'
+                + '<span class="message">'
+                + escape(error_message, quote=False)
+                + "</span>"
+                + "<a href=hide>"
+                + chr(0x00D7)
+                + "</a></div>"
+                + "</body>"
+            )
+
         new_phantom = Phantom(
             Region(error_point, view.line(error_point).b),
             phantom_content(),
@@ -151,15 +165,14 @@ class PrettyShell:
         entire_text = view.substr(entire_region)
 
         # Early return
-        if not entire_text: return
+        if not entire_text:
+            return
 
         # Execute shell and get output
-        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True,
-                   stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
+        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
             # Nil check to suppress linter
-            if not popen.stdin: return
-            if not popen.stdout: return
-            if not popen.stderr: return
+            if not popen.stdin or not popen.stdout or not popen.stderr:
+                return
             # Write target_text into stdin and ensure the descriptor is closed
             popen.stdin.write(entire_text.encode(UTF_8))
             popen.stdin.close()
@@ -182,7 +195,7 @@ class PrettyShell:
 
         # Present alert for other errors
         if stderr and not error_point:
-            alert("Pretty Shell\n"+ stderr)
+            alert("Pretty Shell\n" + stderr)
             return
 
         # Print parsing error
@@ -215,6 +228,7 @@ class PrettyShell:
 class PrettyShellCommand(TextCommand):
     def run(self, edit):
         PrettyShell.execute_format(self.view, edit)
+
 
 class PrettyShellListener(ViewEventListener):
     def on_pre_save(self):
