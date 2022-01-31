@@ -1,0 +1,14 @@
+v1.5.0
+
+This version contains major refactoring internally, and
+contains some breaking changes, small improvements and bug fixes.
+
+New:
+    • Added "show_error_inline" option.
+
+Breaking Changes:
+    • Removed all default Key-Bindings.
+      Please bind it in user keymap file if needed.
+
+    • Removed "Format Selection" and "Minify" related features.
+      "minify" option in settings is still available.

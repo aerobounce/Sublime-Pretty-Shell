@@ -14,7 +14,7 @@
                                 "command": "edit_settings",
                                 "args": {
                                     "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-                                    "default": "{\n\n}"
+                                    "default": "{\n$0\n}"
                                 }
                             }
                         ]
