@@ -6,6 +6,7 @@
 [![](https://img.shields.io/badge/Sublime%20Text-3+-orange.svg)][packagecontrol]
 [![](https://img.shields.io/github/v/tag/aerobounce/Sublime-Pretty-Shell?display_name=tag)][packagecontrol]
 
+- Uses [`shfmt`][shfmt]
 - Format on Save
 - Fast Formatting
 - Syntax Checking
