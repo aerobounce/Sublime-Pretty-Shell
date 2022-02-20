@@ -18,13 +18,10 @@
 
 > [Available via Package Control][packagecontrol]
 
-1. `Package Control: Install Package`
-2. Install `Pretty Shell`
-
-
-## Requirements
-
-[`shfmt`][shfmt]
+1. Install [`shfmt`][shfmt]
+2. `Package Control: Install Package`
+3. Install `Pretty Shell`
+4. Linux / Windows users: Specify absolute path to `shfmt` in Settings.
 
 
 [packagecontrol]: https://packagecontrol.io/packages/Pretty%20Shell
