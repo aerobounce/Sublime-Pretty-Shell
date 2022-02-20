@@ -12,6 +12,8 @@ from html import escape
 from re import compile
 from subprocess import PIPE
 from subprocess import Popen
+from subprocess import CalledProcessError, SubprocessError
+
 
 from sublime import LAYOUT_BELOW
 from sublime import Edit, Phantom, PhantomSet, Region, View
@@ -171,18 +173,31 @@ class PrettyShell:
             return
 
         # Execute shell and get output
-        with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
-            # Nil check to suppress linter
-            if not popen.stdin or not popen.stdout or not popen.stderr:
-                return
-            # Write target_text into stdin and ensure the descriptor is closed
-            popen.stdin.write(entire_text.encode(UTF_8))
-            popen.stdin.close()
-            # Read stdout and stderr
-            stdout = popen.stdout.read().decode(UTF_8)
-            stderr = popen.stderr.read().decode(UTF_8)
-            stderr = stderr.replace("<standard input>:", "")
-            stderr = stderr.replace("\n", "")
+        try:
+            with Popen(cls.shell_command, cwd=cls.shell_cwd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE) as popen:
+                # Nil check to suppress linter
+                if not popen.stdin or not popen.stdout or not popen.stderr:
+                    return
+                # Write target_text into stdin and ensure the descriptor is closed
+                popen.stdin.write(entire_text.encode(UTF_8))
+                popen.stdin.close()
+                # Read stdout and stderr
+                stdout = popen.stdout.read().decode(UTF_8)
+                stderr = popen.stderr.read().decode(UTF_8)
+                stderr = stderr.replace("<standard input>:", "")
+                stderr = stderr.replace("\n", "")
+
+        except CalledProcessError as e:
+            stdout = ""
+            stderr = "{0} {1}".format(e, e.output)
+            print("[Pretty Shell] CalledProcessError:")
+            print(e.output)
+
+        except SubprocessError as e:
+            stdout = ""
+            stderr = "{0} {1}".format(e)
+            print("[Pretty Shell] SubprocessError:")
+            print(e)
 
         # Print command executed to the console
         print("[Pretty Shell] Popen:", cls.shell_command)
