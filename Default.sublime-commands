@@ -4,11 +4,20 @@
         "command": "pretty_shell"
     },
     {
-        "caption": "Pretty Shell: Settings",
+        "caption": "Preferences: Pretty Shell Settings",
         "command": "edit_settings",
         "args": {
             "base_file": "${packages}/Pretty Shell/Pretty Shell.sublime-settings",
-            "default": "{\n$0\n}"
+            "default": "{\n$0\n}\n"
+        }
+    },
+    {
+        "caption": "Preferences: Pretty Shell Key Bindings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/Pretty Shell/Default.sublime-keymap",
+            "user_file": "${packages}/User/Default ($platform).sublime-keymap",
+            "default": "[\n\t$0\n]\n",
         }
     }
 ]

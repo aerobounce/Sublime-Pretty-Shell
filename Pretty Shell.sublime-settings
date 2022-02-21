@@ -1,31 +1,45 @@
 {
     // Binary path.
     "shfmt_bin_path": "shfmt",
+
     // Run format command on save.
     "format_on_save": true,
+
     // Enable inline error popup.
     "show_error_inline": true,
+
     // Scroll to the syntax error point.
     "scroll_to_error_point": true,
-    /**
-     * shfmt options (leave to use default behavior)
-     */
+
+    //
+    // shfmt options
+    //  * Leave intact to use its default behavior.
+    //
+
     // Simplify the code
     "simplify": false,
+
     // Minify the code (implies "simplify")
     "minify": false,
+
     // bash/posix/mksh/bats (default: bash)
     "language": "",
+
     // 0 for tabs (default), >0 for number of spaces
     "indent": "",
+
     // Operators such as '&&' and '|' may start a line
     "binop": false,
+
     // Indent switch cases
     "switchcase": false,
+
     // Redirect operators will be followed by a space
     "rediop": false,
+
     // Keep column alignment paddings
     "align": false,
+
     // Place function opening braces on a separate line
     "fnbrace": false
 }
