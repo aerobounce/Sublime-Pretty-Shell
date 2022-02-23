@@ -125,14 +125,12 @@ class PrettyShell:
 
         # Create Phantom
         def phantom_content():
-            # Remove unneeded text from stderr
-            error_message = compile(r"[0-9]{1,}:[0-9]{1,}:.").sub("", stderr)
             return (
                 "<body id=inline-error>"
                 + PHANTOM_STYLE
                 + '<div class="error-arrow"></div><div class="error">'
                 + '<span class="message">'
-                + escape(error_message, quote=False)
+                + escape(stderr, quote=False)
                 + "</span>"
                 + "<a href=hide>"
                 + chr(0x00D7)
