@@ -8,12 +8,11 @@
 
 from html import escape
 from re import compile
-from subprocess import PIPE
-from subprocess import Popen
+from subprocess import PIPE, Popen
 
-from sublime import LAYOUT_BELOW
-from sublime import Edit, Phantom, PhantomSet, Region, View
-from sublime import error_message as alert, load_settings, packages_path
+from sublime import LAYOUT_BELOW, Edit, Phantom, PhantomSet, Region, View
+from sublime import error_message as alert
+from sublime import load_settings, packages_path
 from sublime_plugin import TextCommand, ViewEventListener
 
 SETTINGS_FILENAME = "Pretty Shell.sublime-settings"
