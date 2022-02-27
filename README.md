@@ -11,7 +11,7 @@
 - Fast Formatting
 - Syntax Checking
 - Inline Syntax Error Popup
-- Auto Scroll to the point Parsing Error occured
+- Auto Scroll to the point parsing error occurred
 
 
 ## Install
